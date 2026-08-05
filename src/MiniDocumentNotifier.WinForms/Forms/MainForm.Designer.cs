@@ -1,12 +1,13 @@
-﻿
-namespace MiniDocumentNotifier.WinForms
+using System.ComponentModel;
+
+namespace MiniDocumentNotifier.WinForms.Forms
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -18,6 +19,7 @@ namespace MiniDocumentNotifier.WinForms
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -29,13 +31,18 @@ namespace MiniDocumentNotifier.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.Name = "MainForm";
+            this.Text = "MainForm";
+            this.ResumeLayout(false);
         }
 
         #endregion
     }
 }
-
