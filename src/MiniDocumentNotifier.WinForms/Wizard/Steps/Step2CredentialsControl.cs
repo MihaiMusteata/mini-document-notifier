@@ -3,23 +3,20 @@ using System.Windows.Forms;
 
 namespace MiniDocumentNotifier.WinForms.Wizard.Steps
 {
-    public partial class Step2CredentialsControl : UserControl
+    public partial class Step2CredentialsControl : UserControl, ILoginWizardStep
     {
-        private LoginWizardState _loginWizardState;
+        private readonly LoginWizardState _loginWizardState;
         public Step2CredentialsControl(LoginWizardState loginWizardState)
         {
-            _loginWizardState = loginWizardState;
             InitializeComponent();
+            _loginWizardState = loginWizardState;
         }
 
-        private void txtUsername_TextChanged(object sender, EventArgs e)
+        public void SaveData()
         {
             _loginWizardState.Username = txtUsername.Text;
-        }
-
-        private void txtPassword_TextChanged(object sender, EventArgs e)
-        {
             _loginWizardState.Password = txtPassword.Text;
+            
         }
     }
 }

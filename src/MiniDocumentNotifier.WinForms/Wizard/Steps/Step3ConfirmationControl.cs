@@ -1,19 +1,31 @@
 using System;
 using System.Windows.Forms;
+using MiniDocumentNotifier.Contracts.DataContracts.Login;
 
 namespace MiniDocumentNotifier.WinForms.Wizard.Steps
 {
-    public partial class Step3ConfirmationControl : UserControl
+    public partial class Step3ConfirmationControl : UserControl, ILoginWizardStep
     {
-        private LoginWizardState _loginWizardState;
+        private readonly LoginWizardState _loginWizardState;
 
         public Step3ConfirmationControl(LoginWizardState loginWizardState)
         {
-            _loginWizardState = loginWizardState;
             InitializeComponent();
+            _loginWizardState = loginWizardState;
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            if (!Visible) return;
 
             txtInstitution.Text = _loginWizardState.InstitutionName;
             txtUsername.Text = _loginWizardState.Username;
+        }
+
+        public void SaveData()
+        {
         }
     }
 }

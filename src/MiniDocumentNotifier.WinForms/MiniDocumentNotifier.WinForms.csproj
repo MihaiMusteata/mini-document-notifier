@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wizard\ILoginWizardStep.cs" />
     <Compile Include="Wizard\LoginWizardState.cs" />
     <Compile Include="Wizard\Steps\Step1InstitutionControl.cs">
       <SubType>UserControl</SubType>

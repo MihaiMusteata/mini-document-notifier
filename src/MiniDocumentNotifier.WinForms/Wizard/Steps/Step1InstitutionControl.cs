@@ -9,10 +9,10 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
         public int Id { get; set; }
         public string Name { get; set; }
     }
-    public partial class Step1InstitutionControl : UserControl
+    public partial class Step1InstitutionControl : UserControl, ILoginWizardStep
     {
    
-        private LoginWizardState _loginWizardState;
+        private readonly LoginWizardState _loginWizardState;
         // TODO: Change mock to real data
         private readonly List<InstitutionOption> MockInstitutions;
         public Step1InstitutionControl(LoginWizardState loginWizardState)
@@ -33,9 +33,8 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
             
         }
 
-        private void cmbSelectInstitution_SelectedIndexChanged(object sender, EventArgs e)
+        public void SaveData()
         {
-            
             var institution = (InstitutionOption)cmbSelectInstitution.SelectedItem;
             
             if (institution == null) return;

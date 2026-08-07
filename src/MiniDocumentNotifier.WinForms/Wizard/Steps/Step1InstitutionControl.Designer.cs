@@ -43,7 +43,6 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
             this.cmbSelectInstitution.Name = "cmbSelectInstitution";
             this.cmbSelectInstitution.Size = new System.Drawing.Size(301, 21);
             this.cmbSelectInstitution.TabIndex = 0;
-            this.cmbSelectInstitution.SelectedIndexChanged += new System.EventHandler(this.cmbSelectInstitution_SelectedIndexChanged);
             // 
             // lblSelectInstitution
             // 

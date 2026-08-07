@@ -7,8 +7,8 @@
     <ProjectGuid>1b54b106-2e33-4ec1-bf1d-17c1f5e8ae39</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MiniDocumentNotifier.Applciation</RootNamespace>
-    <AssemblyName>MiniDocumentNotifier.Applciation</AssemblyName>
+    <RootNamespace>MiniDocumentNotifier.Application</RootNamespace>
+    <AssemblyName>MiniDocumentNotifier.Application</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
