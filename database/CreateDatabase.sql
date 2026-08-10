@@ -21,6 +21,7 @@ CREATE TABLE Users (
 	Id INT IDENTITY(1,1) NOT NULL,
 	Username VARCHAR(32) NOT NULL,
 	PasswordHash VARCHAR(256) NOT NULL,
+    PasswordSalt VARCHAR(256) NOT NULL,
 	InstitutionId INT NOT NULL,
 	IsEnabled BIT NOT NULL CONSTRAINT DF_Users_IsEnabled DEFAULT(1),
 
