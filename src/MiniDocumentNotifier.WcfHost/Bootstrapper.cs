@@ -19,7 +19,7 @@ namespace MiniDocumentNotifier.WcfHost
             container.RegisterType<IInstitutionRepository, InstitutionRepository>();
             container.RegisterType<IPasswordHasher, Pbkdf2PasswordHasher>();
             container.RegisterType<IAuthenticationService, AuthenticationService>();
-            container.RegisterType<IInstitutionQueryService, IInstitutionQueryService>();
+            container.RegisterType<IInstitutionQueryService, InstitutionQueryService>();
 
             return container;
         }

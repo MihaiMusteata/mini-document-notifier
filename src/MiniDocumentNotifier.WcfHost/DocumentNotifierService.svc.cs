@@ -37,7 +37,7 @@ namespace MiniDocumentNotifier.WcfHost
             }
             catch (AuthenticationException ex)
             {
-                throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message });
+                throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message }, new FaultReason("Failed."));
             }
         }
 
@@ -50,7 +50,7 @@ namespace MiniDocumentNotifier.WcfHost
             }
             catch (Exception ex)
             {
-                throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message });
+                throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message }, new FaultReason("Failed."));
             }
         }
     }

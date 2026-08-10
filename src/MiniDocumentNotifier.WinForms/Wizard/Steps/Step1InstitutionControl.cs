@@ -1,46 +1,69 @@
 using System;
 using System.Collections.Generic;
+using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using MiniDocumentNotifier.Contracts.InstitutionContracts;
+using MiniDocumentNotifier.WinForms.Services;
 
 namespace MiniDocumentNotifier.WinForms.Wizard.Steps
 {
-    public class InstitutionOption
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
     public partial class Step1InstitutionControl : UserControl, ILoginWizardStep
     {
-   
         private readonly LoginWizardState _loginWizardState;
-        // TODO: Change mock to real data
-        private readonly List<InstitutionOption> MockInstitutions;
+        private bool _loaded;
+
         public Step1InstitutionControl(LoginWizardState loginWizardState)
         {
             InitializeComponent();
-            MockInstitutions = new List<InstitutionOption>()
-            {
-                new InstitutionOption { Id = 1, Name = "Moldova Agroindbank" },
-                new InstitutionOption { Id = 2, Name = "Moldindconbank" },
-                new InstitutionOption { Id = 3, Name = "Victoriabank" }
-            };
-
             _loginWizardState = loginWizardState;
 
-            cmbSelectInstitution.DataSource = MockInstitutions;
-            cmbSelectInstitution.ValueMember = "Id";
-            cmbSelectInstitution.DisplayMember =  "Name";
-            
+            Load += async (s, e) => await LoadInstitutionsAsync();
         }
 
         public void SaveData()
         {
-            var institution = (InstitutionOption)cmbSelectInstitution.SelectedItem;
-            
+            var institution = (InstitutionDto)cmbSelectInstitution.SelectedItem;
+
             if (institution == null) return;
 
             _loginWizardState.InstitutionName = institution.Name;
             _loginWizardState.InstitutionId = institution.Id;
+        }
+
+        private async Task LoadInstitutionsAsync()
+        {
+            if (_loaded) return;
+
+            cmbSelectInstitution.Enabled = true;
+
+            try
+            {
+                var institutions = await Task.Run(() =>
+                {
+                    using (var client = new DocumentNotifierServiceClient())
+                    {
+                        return client.GetInstitutions();
+                    }
+                });
+
+                cmbSelectInstitution.DataSource = institutions;
+                cmbSelectInstitution.ValueMember = "Id";
+                cmbSelectInstitution.DisplayMember = "Name";
+                _loaded = true;
+            }
+            catch (EndpointNotFoundException)
+            {
+                MessageBox.Show(this, "Service is not available", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (CommunicationException)
+            {
+                MessageBox.Show(this, "Communication error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                cmbSelectInstitution.Enabled = true;
+            }
         }
     }
 }
