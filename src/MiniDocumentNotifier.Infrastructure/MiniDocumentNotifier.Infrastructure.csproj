@@ -47,6 +47,11 @@
     <Reference Include="System.Xml"/>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concurrency\Constants.cs" />
+    <Compile Include="Concurrency\IBackgroundAppSignal.cs" />
+    <Compile Include="Concurrency\ISingleInstanceGuard.cs" />
+    <Compile Include="Concurrency\MutexSingleInstanceGuard.cs" />
+    <Compile Include="Concurrency\SemaphoreBackgroundAppSignal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\IPasswordHasher.cs" />
     <Compile Include="Security\Pbkdf2PasswordHasher.cs" />
