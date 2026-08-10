@@ -35,52 +35,67 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
             this.lblUsername = new System.Windows.Forms.Label();
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
+            this.grpCredentials = new System.Windows.Forms.GroupBox();
+            this.grpCredentials.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(49, 130);
+            this.txtUsername.Location = new System.Drawing.Point(43, 45);
             this.txtUsername.Name = "txtUsername";
-            this.txtUsername.Size = new System.Drawing.Size(247, 20);
+            this.txtUsername.Size = new System.Drawing.Size(301, 20);
             this.txtUsername.TabIndex = 1;
             // 
             // lblUsername
             // 
-            this.lblUsername.Location = new System.Drawing.Point(49, 113);
+            this.lblUsername.Location = new System.Drawing.Point(43, 27);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(100, 14);
+            this.lblUsername.Size = new System.Drawing.Size(100, 15);
             this.lblUsername.TabIndex = 2;
             this.lblUsername.Text = "Username";
             // 
             // lblPassword
             // 
-            this.lblPassword.Location = new System.Drawing.Point(49, 162);
+            this.lblPassword.Location = new System.Drawing.Point(43, 72);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(100, 14);
+            this.lblPassword.Size = new System.Drawing.Size(100, 15);
             this.lblPassword.TabIndex = 4;
             this.lblPassword.Text = "Password";
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(49, 179);
+            this.txtPassword.Location = new System.Drawing.Point(43, 90);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.Size = new System.Drawing.Size(247, 20);
+            this.txtPassword.Size = new System.Drawing.Size(301, 20);
             this.txtPassword.TabIndex = 3;
             this.txtPassword.UseSystemPasswordChar = true;
+            // 
+            // grpCredentials
+            // 
+            this.grpCredentials.Controls.Add(this.lblPassword);
+            this.grpCredentials.Controls.Add(this.txtPassword);
+            this.grpCredentials.Controls.Add(this.lblUsername);
+            this.grpCredentials.Controls.Add(this.txtUsername);
+            this.grpCredentials.Location = new System.Drawing.Point(210, 130);
+            this.grpCredentials.Name = "grpCredentials";
+            this.grpCredentials.Size = new System.Drawing.Size(365, 145);
+            this.grpCredentials.TabIndex = 6;
+            this.grpCredentials.TabStop = false;
+            this.grpCredentials.Text = "Credentials";
             // 
             // Step2CredentialsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lblPassword);
-            this.Controls.Add(this.txtPassword);
-            this.Controls.Add(this.lblUsername);
-            this.Controls.Add(this.txtUsername);
+            this.Controls.Add(this.grpCredentials);
             this.Name = "Step2CredentialsControl";
-            this.Size = new System.Drawing.Size(366, 283);
+            this.Size = new System.Drawing.Size(785, 405);
+            this.grpCredentials.ResumeLayout(false);
+            this.grpCredentials.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
+
+        private System.Windows.Forms.GroupBox grpCredentials;
 
         private System.Windows.Forms.Label lblPassword;
         private System.Windows.Forms.TextBox txtPassword;

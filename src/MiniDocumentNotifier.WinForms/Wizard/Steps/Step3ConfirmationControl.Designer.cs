@@ -36,63 +36,78 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.lblUsername = new System.Windows.Forms.Label();
             this.btnLogin = new System.Windows.Forms.Button();
+            this.grpConfirmation = new System.Windows.Forms.GroupBox();
+            this.grpConfirmation.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblInstitution
             // 
-            this.lblInstitution.Location = new System.Drawing.Point(73, 72);
+            this.lblInstitution.Location = new System.Drawing.Point(43, 27);
             this.lblInstitution.Name = "lblInstitution";
-            this.lblInstitution.Size = new System.Drawing.Size(116, 16);
+            this.lblInstitution.Size = new System.Drawing.Size(100, 15);
             this.lblInstitution.TabIndex = 0;
-            this.lblInstitution.Text = "Institution:";
+            this.lblInstitution.Text = "Institution";
             // 
             // txtInstitution
             // 
-            this.txtInstitution.Location = new System.Drawing.Point(73, 91);
+            this.txtInstitution.Location = new System.Drawing.Point(43, 45);
             this.txtInstitution.Name = "txtInstitution";
             this.txtInstitution.ReadOnly = true;
-            this.txtInstitution.Size = new System.Drawing.Size(186, 20);
+            this.txtInstitution.Size = new System.Drawing.Size(301, 20);
             this.txtInstitution.TabIndex = 1;
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(73, 139);
+            this.txtUsername.Location = new System.Drawing.Point(43, 90);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.ReadOnly = true;
-            this.txtUsername.Size = new System.Drawing.Size(186, 20);
+            this.txtUsername.Size = new System.Drawing.Size(301, 20);
             this.txtUsername.TabIndex = 3;
             // 
             // lblUsername
             // 
-            this.lblUsername.Location = new System.Drawing.Point(73, 120);
+            this.lblUsername.Location = new System.Drawing.Point(43, 72);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(116, 16);
+            this.lblUsername.Size = new System.Drawing.Size(100, 15);
             this.lblUsername.TabIndex = 2;
-            this.lblUsername.Text = "Username:";
+            this.lblUsername.Text = "Username";
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(184, 174);
+            this.btnLogin.Location = new System.Drawing.Point(269, 112);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 23);
             this.btnLogin.TabIndex = 4;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
             // 
+            // grpConfirmation
+            // 
+            this.grpConfirmation.Controls.Add(this.btnLogin);
+            this.grpConfirmation.Controls.Add(this.txtUsername);
+            this.grpConfirmation.Controls.Add(this.lblUsername);
+            this.grpConfirmation.Controls.Add(this.txtInstitution);
+            this.grpConfirmation.Controls.Add(this.lblInstitution);
+            this.grpConfirmation.Location = new System.Drawing.Point(210, 130);
+            this.grpConfirmation.Name = "grpConfirmation";
+            this.grpConfirmation.Size = new System.Drawing.Size(365, 145);
+            this.grpConfirmation.TabIndex = 5;
+            this.grpConfirmation.TabStop = false;
+            this.grpConfirmation.Text = "Confirmation";
+            // 
             // Step3ConfirmationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnLogin);
-            this.Controls.Add(this.txtUsername);
-            this.Controls.Add(this.lblUsername);
-            this.Controls.Add(this.txtInstitution);
-            this.Controls.Add(this.lblInstitution);
+            this.Controls.Add(this.grpConfirmation);
             this.Name = "Step3ConfirmationControl";
-            this.Size = new System.Drawing.Size(487, 403);
+            this.Size = new System.Drawing.Size(785, 405);
+            this.grpConfirmation.ResumeLayout(false);
+            this.grpConfirmation.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
         }
+
+        private System.Windows.Forms.GroupBox grpConfirmation;
 
         private System.Windows.Forms.TextBox txtInstitution;
 

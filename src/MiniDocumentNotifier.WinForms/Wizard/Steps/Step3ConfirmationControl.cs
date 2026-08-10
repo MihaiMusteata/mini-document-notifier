@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using MiniDocumentNotifier.Contracts.DataContracts.Login;
 
 namespace MiniDocumentNotifier.WinForms.Wizard.Steps
 {
