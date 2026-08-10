@@ -15,7 +15,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -42,6 +42,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -59,20 +63,58 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=5.11.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.5.11.10\lib\net47\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.5.11.10\lib\net47\Unity.Container.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Service1.svc" />
+    <Content Include="DocumentNotifierService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Service1.svc.cs">
-      <DependentUpon>Service1.svc</DependentUpon>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="DocumentNotifierService.svc.cs">
+      <DependentUpon>DocumentNotifierService.svc</DependentUpon>
     </Compile>
-    <Compile Include="IService1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnityInstanceProvider.cs" />
+    <Compile Include="UnityServiceBehavior.cs" />
+    <Compile Include="UnityServiceHostFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MiniDocumentNotifier.Application\MiniDocumentNotifier.Application.csproj">
+      <Project>{791c5964-767d-42ec-9378-0f58d7e4a18f}</Project>
+      <Name>MiniDocumentNotifier.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Application\MiniDocumentNotifier.Application.csproj">
+      <Project>{791c5964-767d-42ec-9378-0f58d7e4a18f}</Project>
+      <Name>MiniDocumentNotifier.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Contracts\MiniDocumentNotifier.Contracts.csproj">
+      <Project>{28fa09cc-5d56-4cf8-8415-0e49cebf0798}</Project>
+      <Name>MiniDocumentNotifier.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
+      <Project>{d85c8837-8be6-4630-8b25-738de5d418ad}</Project>
+      <Name>MiniDocumentNotifier.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Infrastructure\MiniDocumentNotifier.Infrastructure.csproj">
+      <Project>{800eb8ba-335f-4ddf-84c0-3037498f95ba}</Project>
+      <Name>MiniDocumentNotifier.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Persistence\MiniDocumentNotifier.Persistence.csproj">
+      <Project>{0f7f89c6-606a-4723-982b-8abbd6c08165}</Project>
+      <Name>MiniDocumentNotifier.Persistence</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -85,12 +127,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost:62033/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

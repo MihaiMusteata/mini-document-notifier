@@ -34,6 +34,10 @@
     <Reference Include="System"/>
     
     <Reference Include="System.Core"/>
+    
+    <Reference Include="System.Runtime.Serialization" />
+    
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq"/>
     <Reference Include="System.Data.DataSetExtensions"/>
     
@@ -47,6 +51,11 @@
     <Reference Include="System.Xml"/>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthContracts\AuthFault.cs" />
+    <Compile Include="AuthContracts\LoginRequest.cs" />
+    <Compile Include="AuthContracts\LoginResult.cs" />
+    <Compile Include="IDocumentNotifierService.cs" />
+    <Compile Include="InstitutionContracts\InstitutionDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
