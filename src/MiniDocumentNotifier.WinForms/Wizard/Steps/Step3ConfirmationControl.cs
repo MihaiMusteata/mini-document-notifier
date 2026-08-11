@@ -11,6 +11,8 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
     {
         private readonly LoginWizardState _loginWizardState;
 
+        public event Action LoginSucceeded;
+
         public Step3ConfirmationControl(LoginWizardState loginWizardState)
         {
             InitializeComponent();
@@ -44,7 +46,7 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
                     Password = _loginWizardState.Password
                 };
 
-                var result = await Task.Run(() =>
+                await Task.Run(() =>
                 {
                     using (var client = new DocumentNotifierServiceClient())
                     {
@@ -52,11 +54,7 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
                     }
                 });
 
-                MessageBox.Show(this, "Logged in succssefully", "Login", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                var wizard = FindForm();
-                wizard?.Close();
+                LoginSucceeded?.Invoke();
             }
             catch (FaultException<AuthFault> fault)
             {

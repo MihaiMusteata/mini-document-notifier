@@ -12,15 +12,24 @@ namespace MiniDocumentNotifier.WinForms.Forms
         private const int MaxStep = 2;
 
         private int _currentStep = MinStep;
+        
+        public event Action LoginSucceeded;
 
         public LoginWizardForm(LoginWizardState loginWizardState)
         {
             _loginWizardState = loginWizardState;
             InitializeComponent();
+            
+            var step3 = new Step3ConfirmationControl(loginWizardState);
+            step3.LoginSucceeded += () =>
+            {
+                LoginSucceeded?.Invoke();
+                Close();
+            };
 
             contentPanel.Controls.Add(new Step1InstitutionControl(loginWizardState));
             contentPanel.Controls.Add(new Step2CredentialsControl(loginWizardState));
-            contentPanel.Controls.Add(new Step3ConfirmationControl(loginWizardState));
+            contentPanel.Controls.Add(step3);
 
             ShowStep(_currentStep);
         }

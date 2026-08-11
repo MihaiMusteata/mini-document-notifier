@@ -6,7 +6,9 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
+using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Enums;
+using MiniDocumentNotifier.Domain.Models;
 using MiniDocumentNotifier.Infrastructure.ViewConfiguration;
 using MiniDocumentNotifier.WinForms.Services;
 
@@ -17,14 +19,20 @@ namespace MiniDocumentNotifier.WinForms.Forms
         private readonly bool _isBackgroundAppRunning;
         private readonly int _institutionId;
         private InstitutionViewConfiguration _institutionConfiguration;
+        private readonly UserPreferences _preferences;
+        private List<DocumentRow> _rows = new List<DocumentRow>();
+        private bool _suppressWidthCapture;
 
-        public MainForm(bool isBackgroundAppRunning, int institutionId)
+        public MainForm(bool isBackgroundAppRunning, int institutionId, IUserPreferencesStore preferencesStore)
         {
             InitializeComponent();
             _isBackgroundAppRunning = isBackgroundAppRunning;
             _institutionId = institutionId;
+            _preferences = preferencesStore.Load();
+
             CheckConfiguration();
             Load += async (s, e) => await LoadDocumentsAsync();
+            FormClosing += (s, e) => preferencesStore.Save(_preferences);
         }
 
         private void CheckConfiguration()
@@ -71,7 +79,13 @@ namespace MiniDocumentNotifier.WinForms.Forms
                     ? documents
                     : documents.Where(d => activeTypes.Contains(d.Type)).ToList();
 
-                documentsDataGrid.DataSource = filtered.Select(ToDisplayRow).ToList();
+                _rows = filtered.Select(ToRow).ToList();
+                ApplySort(_preferences.DefaultSortColumn, _preferences.DefaultSortDescending);
+
+                _suppressWidthCapture = true;
+                BindGrid();
+                ApplyColumnWidths();
+                _suppressWidthCapture = false;
             }
             catch (EndpointNotFoundException)
             {
@@ -83,17 +97,66 @@ namespace MiniDocumentNotifier.WinForms.Forms
             }
         }
 
-        private static object ToDisplayRow(DocumentDto document)
+        private static DocumentRow ToRow(DocumentDto document)
         {
-            return new
+            return new DocumentRow
             {
-                document.Id,
-                document.Name,
+                Id = document.Id,
+                Name = document.Name,
                 Type = DocumentLabels.DocumentTypeLabels[document.Type],
                 Status = DocumentLabels.DocumentStatusLabels[document.Status],
-                document.UploadDate
+                UploadDate = document.UploadDate
             };
         }
 
+        private void BindGrid()
+        {
+            documentsDataGrid.DataSource = null;
+            documentsDataGrid.DataSource = _rows;
+        }
+
+        private void ApplySort(string columnName, bool descending)
+        {
+            if (string.IsNullOrEmpty(columnName)) return;
+
+            var property = typeof(DocumentRow).GetProperty(columnName);
+            if (property == null) return;
+
+            _rows = descending
+                ? _rows.OrderByDescending(property.GetValue).ToList()
+                : _rows.OrderBy(property.GetValue).ToList();
+        }
+
+        private void ApplyColumnWidths()
+        {
+            foreach (DataGridViewColumn column in documentsDataGrid.Columns)
+            {
+                if (_preferences.ColumnWidths.TryGetValue(column.Name, out var weight))
+                    column.FillWeight = weight;
+            }
+        }
+
+        private void documentsDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var columnName = documentsDataGrid.Columns[e.ColumnIndex].Name;
+            var descending = _preferences.DefaultSortColumn == columnName && !_preferences.DefaultSortDescending;
+
+            _preferences.DefaultSortColumn = columnName;
+            _preferences.DefaultSortDescending = descending;
+
+            ApplySort(columnName, descending);
+
+            _suppressWidthCapture = true;
+            BindGrid();
+            ApplyColumnWidths();
+            _suppressWidthCapture = false;
+        }
+
+        private void documentsDataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            if (_suppressWidthCapture) return;
+
+            _preferences.ColumnWidths[e.Column.Name] = e.Column.FillWeight;
+        }
     }
 }

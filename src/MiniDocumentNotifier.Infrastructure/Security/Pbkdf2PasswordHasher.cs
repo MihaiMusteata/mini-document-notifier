@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using MiniDocumentNotifier.Domain.Abstractions;
 
 namespace MiniDocumentNotifier.Infrastructure.Security
 {

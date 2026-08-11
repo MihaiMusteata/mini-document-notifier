@@ -39,6 +39,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
             // 
             this.documentsDataGrid.AllowUserToAddRows = false;
             this.documentsDataGrid.AllowUserToDeleteRows = false;
+            this.documentsDataGrid.AllowUserToResizeColumns = true;
             this.documentsDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.documentsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.documentsDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -46,9 +47,12 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.documentsDataGrid.MultiSelect = false;
             this.documentsDataGrid.Name = "documentsDataGrid";
             this.documentsDataGrid.ReadOnly = true;
+            this.documentsDataGrid.RowHeadersVisible = false;
             this.documentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.documentsDataGrid.Size = new System.Drawing.Size(800, 450);
             this.documentsDataGrid.TabIndex = 0;
+            this.documentsDataGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.documentsDataGrid_ColumnHeaderMouseClick);
+            this.documentsDataGrid.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.documentsDataGrid_ColumnWidthChanged);
             // 
             // MainForm
             // 

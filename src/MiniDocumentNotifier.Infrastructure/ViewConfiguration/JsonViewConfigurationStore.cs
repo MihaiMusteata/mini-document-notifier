@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MiniDocumentNotifier.Domain.Abstractions;
+using MiniDocumentNotifier.Domain.Models;
 using Newtonsoft.Json.Linq;
 
 namespace MiniDocumentNotifier.Infrastructure.ViewConfiguration

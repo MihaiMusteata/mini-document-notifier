@@ -1,6 +1,7 @@
 using MiniDocumentNotifier.Application.Auth;
 using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Application.Institution;
+using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Repositories;
 using MiniDocumentNotifier.Infrastructure.Security;
 using MiniDocumentNotifier.Persistence.Repositories;

@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppContext.cs" />
+    <Compile Include="DocumentRow.cs" />
     <Compile Include="Forms\LoginWizardForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -10,6 +10,9 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
         {
             InitializeComponent();
             _loginWizardState = loginWizardState;
+
+            if (!string.IsNullOrEmpty(_loginWizardState.Username))
+                txtUsername.Text = _loginWizardState.Username;
         }
 
         public void SaveData()

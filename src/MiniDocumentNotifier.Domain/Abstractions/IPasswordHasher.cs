@@ -1,4 +1,4 @@
-namespace MiniDocumentNotifier.Infrastructure.Security
+namespace MiniDocumentNotifier.Domain.Abstractions
 {
     public interface IPasswordHasher
     {
