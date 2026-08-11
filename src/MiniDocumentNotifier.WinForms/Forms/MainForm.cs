@@ -10,6 +10,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
         {
             _isBackgroundAppRunning = isBackgroundAppRunning;
             InitializeComponent();
+            MessageBox.Show(isBackgroundAppRunning ? "is running" : "is not running");
         }
 
     }

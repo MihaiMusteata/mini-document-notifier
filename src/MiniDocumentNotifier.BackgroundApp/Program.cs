@@ -19,11 +19,5 @@ namespace MiniDocumentNotifier.BackgroundApp
                 }
             }
         }
-        public static class SyncWorker
-        {
-            public static void Run()
-            {
-            }
-        }
     }
 }

@@ -56,6 +56,7 @@
     <Compile Include="Enums\DocumentType.cs" />
     <Compile Include="Repositories\IInstitutionRepository.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
+    <Compile Include="Repositories\IViewConfigurationRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
  </Project>

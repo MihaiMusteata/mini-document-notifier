@@ -83,3 +83,4 @@ Desktop.ini
 *.7z
 
 .nuget/
+view-configurations.json
