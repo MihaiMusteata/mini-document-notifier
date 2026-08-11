@@ -135,6 +135,10 @@
       <Project>{28fa09cc-5d56-4cf8-8415-0e49cebf0798}</Project>
       <Name>MiniDocumentNotifier.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Infrastructure\MiniDocumentNotifier.Infrastructure.csproj">
+      <Project>{800eb8ba-335f-4ddf-84c0-3037498f95ba}</Project>
+      <Name>MiniDocumentNotifier.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

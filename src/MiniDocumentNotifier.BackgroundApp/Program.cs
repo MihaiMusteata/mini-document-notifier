@@ -1,9 +1,29 @@
-﻿namespace MiniDocumentNotifier.BackgroundApp
+﻿
+using MiniDocumentNotifier.Infrastructure.Concurrency;
+
+namespace MiniDocumentNotifier.BackgroundApp
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
+            using (var mutexGuard = new MutexSingleInstanceGuard(Constants.BackgroundAppMutexName))
+            {
+                if (!mutexGuard.TryAcquire())
+                    return;
+
+                using (var signal = new SemaphoreBackgroundAppSignal(Constants.BackgroundAppSemaphoreName))
+                {
+                    signal.MarkActive();
+                    SyncWorker.Run();
+                }
+            }
+        }
+        public static class SyncWorker
+        {
+            public static void Run()
+            {
+            }
         }
     }
 }
