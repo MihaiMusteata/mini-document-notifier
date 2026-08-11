@@ -62,6 +62,8 @@
     <ItemGroup>
         <Compile Include="Auth\AuthenticationService.cs" />
         <Compile Include="Auth\IAuthenticationService.cs" />
+        <Compile Include="Document\DocumentQueryService.cs" />
+        <Compile Include="Document\IDocumentQueryService.cs" />
         <Compile Include="Institution\IInstitutionQueryService.cs" />
         <Compile Include="Institution\InstitutionQueryService.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

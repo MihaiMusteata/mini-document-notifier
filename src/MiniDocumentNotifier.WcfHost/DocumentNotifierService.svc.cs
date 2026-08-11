@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Security.Authentication;
 using System.ServiceModel;
 using MiniDocumentNotifier.Application.Auth;
+using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Application.Institution;
 using MiniDocumentNotifier.Contracts;
 using MiniDocumentNotifier.Contracts.AuthContracts;
+using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 using MiniDocumentNotifier.Domain.Repositories;
 
@@ -15,11 +17,14 @@ namespace MiniDocumentNotifier.WcfHost
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IInstitutionQueryService _institutionQueryService;
+        private readonly IDocumentQueryService _documentQueryService;
 
-        public DocumentNotifierService(IAuthenticationService authenticationService, IInstitutionQueryService institutionQueryService)
+        public DocumentNotifierService(IAuthenticationService authenticationService,
+            IInstitutionQueryService institutionQueryService, IDocumentQueryService documentQueryService)
         {
             _authenticationService = authenticationService;
             _institutionQueryService = institutionQueryService;
+            _documentQueryService = documentQueryService;
         }
 
         public LoginResult Login(LoginRequest request)
@@ -51,6 +56,19 @@ namespace MiniDocumentNotifier.WcfHost
             catch (Exception ex)
             {
                 throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message }, new FaultReason("Failed."));
+            }
+        }
+
+        public List<DocumentDto> GetDocuments(int institutionId)
+        {
+            try
+            {
+                var documents = _documentQueryService.GetByInstitution(institutionId);
+                return documents;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to retrieve documents.", ex);
             }
         }
     }

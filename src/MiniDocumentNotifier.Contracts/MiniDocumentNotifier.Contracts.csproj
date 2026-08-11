@@ -54,9 +54,16 @@
     <Compile Include="AuthContracts\AuthFault.cs" />
     <Compile Include="AuthContracts\LoginRequest.cs" />
     <Compile Include="AuthContracts\LoginResult.cs" />
+    <Compile Include="DocumentContracts\DocumentDto.cs" />
     <Compile Include="IDocumentNotifierService.cs" />
     <Compile Include="InstitutionContracts\InstitutionDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
+      <Project>{d85c8837-8be6-4630-8b25-738de5d418ad}</Project>
+      <Name>MiniDocumentNotifier.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
  </Project>

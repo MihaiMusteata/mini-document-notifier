@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using MiniDocumentNotifier.Contracts.AuthContracts;
+using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 
 namespace MiniDocumentNotifier.Contracts
@@ -14,6 +15,9 @@ namespace MiniDocumentNotifier.Contracts
 
         [OperationContract]
         List<InstitutionDto> GetInstitutions();
+        
+        [OperationContract]
+        List<DocumentDto> GetDocuments(int institutionId);
         
     }
 }

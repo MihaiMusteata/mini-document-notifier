@@ -1,4 +1,5 @@
 using MiniDocumentNotifier.Application.Auth;
+using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Application.Institution;
 using MiniDocumentNotifier.Domain.Repositories;
 using MiniDocumentNotifier.Infrastructure.Security;
@@ -10,16 +11,19 @@ namespace MiniDocumentNotifier.WcfHost
     public static class Bootstrapper
     {
         public static readonly IUnityContainer Container = BuildContainer();
-        
+
         private static IUnityContainer BuildContainer()
         {
             var container = new UnityContainer();
 
             container.RegisterType<IUserRepository, UserRepository>();
             container.RegisterType<IInstitutionRepository, InstitutionRepository>();
+            container.RegisterType<IDocumentRepository, DocumentRepository>();
+            
             container.RegisterType<IPasswordHasher, Pbkdf2PasswordHasher>();
             container.RegisterType<IAuthenticationService, AuthenticationService>();
             container.RegisterType<IInstitutionQueryService, InstitutionQueryService>();
+            container.RegisterType<IDocumentQueryService, DocumentQueryService>();
 
             return container;
         }
