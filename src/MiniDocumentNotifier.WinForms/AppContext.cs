@@ -1,12 +1,14 @@
 using System.Windows.Forms;
 using MiniDocumentNotifier.Infrastructure.Concurrency;
 using MiniDocumentNotifier.WinForms.Forms;
+using MiniDocumentNotifier.WinForms.Wizard;
 
 namespace MiniDocumentNotifier.WinForms
 {
     public class AppContext : ApplicationContext
     {
         private bool _isBackgroundAppRunning;
+        private readonly LoginWizardState _loginWizardState = new LoginWizardState();
 
         public AppContext()
         {
@@ -19,14 +21,14 @@ namespace MiniDocumentNotifier.WinForms
         {
             _isBackgroundAppRunning = CheckBackgroundAppRunning();
 
-            var loginWizardForm = new LoginWizardForm();
+            var loginWizardForm = new LoginWizardForm(_loginWizardState);
             loginWizardForm.FormClosed += LoginWizardForm_FormClosed;
             loginWizardForm.Show();
         }
 
         private void LoginWizardForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            var mainForm = new MainForm(_isBackgroundAppRunning);
+            var mainForm = new MainForm(_isBackgroundAppRunning, _loginWizardState.InstitutionId);
             mainForm.FormClosed += (s, args) => { ExitThread(); };
             mainForm.Show();
         }

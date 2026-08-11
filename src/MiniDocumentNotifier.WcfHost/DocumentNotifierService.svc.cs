@@ -68,7 +68,7 @@ namespace MiniDocumentNotifier.WcfHost
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to retrieve documents.", ex);
+                throw new FaultException(ex.ToString());
             }
         }
     }

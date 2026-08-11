@@ -35,7 +35,7 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
         {
             if (_loaded) return;
 
-            cmbSelectInstitution.Enabled = true;
+            cmbSelectInstitution.Enabled = false;
 
             try
             {
@@ -50,6 +50,7 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
                 cmbSelectInstitution.DataSource = institutions;
                 cmbSelectInstitution.ValueMember = "Id";
                 cmbSelectInstitution.DisplayMember = "Name";
+                cmbSelectInstitution.Enabled = true;
                 _loaded = true;
             }
             catch (EndpointNotFoundException)

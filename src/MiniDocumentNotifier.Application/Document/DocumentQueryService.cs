@@ -22,8 +22,8 @@ namespace MiniDocumentNotifier.Application.Document
                 {
                     Id = entity.Id,
                     Name = entity.Name,
-                    Type = DocumentLabels.DocumentTypeLabels[entity.Type],
-                    Status = DocumentLabels.DocumentStatusLabels[entity.Status],
+                    Type = entity.Type,
+                    Status = entity.Status,
                     UploadDate = entity.UploadDate
                 }).ToList();
         }

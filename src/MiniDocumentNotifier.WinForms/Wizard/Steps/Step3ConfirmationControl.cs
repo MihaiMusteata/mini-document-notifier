@@ -54,6 +54,9 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
 
                 MessageBox.Show(this, "Logged in succssefully", "Login", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
+                var wizard = FindForm();
+                wizard?.Close();
             }
             catch (FaultException<AuthFault> fault)
             {

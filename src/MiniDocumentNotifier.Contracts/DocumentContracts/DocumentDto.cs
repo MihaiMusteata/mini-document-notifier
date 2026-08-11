@@ -10,8 +10,8 @@ namespace MiniDocumentNotifier.Contracts.DocumentContracts
     {
         [DataMember] public int Id { get; set; }
         [DataMember] public string Name { get; set; }
-        [DataMember] public string Type { get; set; }
-        [DataMember] public string Status { get; set; }
+        [DataMember] public DocumentType Type { get; set; }
+        [DataMember] public DocumentStatus Status { get; set; }
         [DataMember] public DateTime UploadDate { get; set; }
         [DataMember] public int InstitutionId { get; set; }
     }

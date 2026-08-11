@@ -18,6 +18,11 @@ namespace MiniDocumentNotifier.Persistence.Repositories
             using (var command = new SqlCommand("Document_GetByInstitution", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(
+                    SetParameter("@InstitutionId", institutionId, SqlDbType.Int)
+                );
+
                 connection.Open();
 
                 using (var reader = command.ExecuteReader())
@@ -36,7 +41,7 @@ namespace MiniDocumentNotifier.Persistence.Repositories
                     }
                 }
             }
-            
+
             return documents;
         }
     }
