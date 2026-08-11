@@ -6,6 +6,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
     public partial class MainForm : Form
     {
         private readonly bool _isBackgroundAppRunning;
+        
         public MainForm(bool isBackgroundAppRunning)
         {
             _isBackgroundAppRunning = isBackgroundAppRunning;

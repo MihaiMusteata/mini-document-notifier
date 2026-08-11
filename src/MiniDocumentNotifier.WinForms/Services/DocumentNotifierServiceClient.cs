@@ -4,6 +4,7 @@ using System.Configuration;
 using System.ServiceModel;
 using MiniDocumentNotifier.Contracts;
 using MiniDocumentNotifier.Contracts.AuthContracts;
+using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 
 namespace MiniDocumentNotifier.WinForms.Services
@@ -21,6 +22,8 @@ namespace MiniDocumentNotifier.WinForms.Services
 
         public LoginResult Login(LoginRequest request) => _channelFactory.CreateChannel().Login(request);
         public List<InstitutionDto> GetInstitutions() => _channelFactory.CreateChannel().GetInstitutions();
+        public List<DocumentDto> GetDocuments(int institutionId) => _channelFactory.CreateChannel().GetDocuments(institutionId);
+
 
         public void Dispose() => _channelFactory.Close();
     }
