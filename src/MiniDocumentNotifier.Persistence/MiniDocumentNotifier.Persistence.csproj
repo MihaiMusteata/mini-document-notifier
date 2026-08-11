@@ -52,6 +52,7 @@
     <Compile Include="Repositories\InstitutionRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="BaseRepository.cs" />
+    <Compile Include="Repositories\ViewConfigurationRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
