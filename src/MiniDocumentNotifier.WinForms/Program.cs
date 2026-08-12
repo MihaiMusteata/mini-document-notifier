@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using MiniDocumentNotifier.Infrastructure.Concurrency;
-using MiniDocumentNotifier.WinForms.Forms;
 
 namespace MiniDocumentNotifier.WinForms
 {

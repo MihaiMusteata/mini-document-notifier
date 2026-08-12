@@ -5,7 +5,7 @@ using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 using Unity;
 
-namespace MiniDocumentNotifier.WcfHost
+namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
 {
     public class UnityServiceBehavior : IServiceBehavior
     {

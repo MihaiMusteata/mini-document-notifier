@@ -7,7 +7,7 @@ using MiniDocumentNotifier.Infrastructure.Security;
 using MiniDocumentNotifier.Persistence.Repositories;
 using Unity;
 
-namespace MiniDocumentNotifier.WcfHost
+namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
 {
     public static class Bootstrapper
     {

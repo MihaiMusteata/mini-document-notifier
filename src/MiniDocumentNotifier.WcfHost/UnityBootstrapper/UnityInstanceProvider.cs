@@ -4,7 +4,7 @@ using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
 using Unity;
 
-namespace MiniDocumentNotifier.WcfHost
+namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
 {
     public class UnityInstanceProvider : IInstanceProvider
     {

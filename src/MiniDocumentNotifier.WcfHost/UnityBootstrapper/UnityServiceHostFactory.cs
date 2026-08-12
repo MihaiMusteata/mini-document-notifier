@@ -2,7 +2,7 @@ using System;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 
-namespace MiniDocumentNotifier.WcfHost
+namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
 {
     public class UnityServiceHostFactory : ServiceHostFactory
     {

@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="MiniDocumentNotifier.WcfHost.DocumentNotifierService" CodeBehind="DocumentNotifierService.svc.cs" Factory="MiniDocumentNotifier.WcfHost.UnityServiceHostFactory" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="MiniDocumentNotifier.WcfHost.DocumentNotifierService" CodeBehind="DocumentNotifierService.svc.cs" Factory="MiniDocumentNotifier.WcfHost.UnityBootstrapper.UnityServiceHostFactory" %>

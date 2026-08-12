@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Models;
 using Newtonsoft.Json;
@@ -23,6 +24,8 @@ namespace MiniDocumentNotifier.Infrastructure.Preferences
                 return defaults;
             }
 
+            // just for checking if UI doesn't freeze during this call
+            Thread.Sleep(2000);
             var json = File.ReadAllText(_filePath);
             return JsonConvert.DeserializeObject<UserPreferences>(json) ?? UserPreferences.CreateDefault();
         }

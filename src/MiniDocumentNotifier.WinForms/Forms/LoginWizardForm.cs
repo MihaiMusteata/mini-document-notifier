@@ -7,19 +7,17 @@ namespace MiniDocumentNotifier.WinForms.Forms
 {
     public partial class LoginWizardForm : Form
     {
-        private readonly LoginWizardState _loginWizardState;
         private const int MinStep = 0;
         private const int MaxStep = 2;
 
         private int _currentStep = MinStep;
-        
+
         public event Action LoginSucceeded;
 
         public LoginWizardForm(LoginWizardState loginWizardState)
         {
-            _loginWizardState = loginWizardState;
             InitializeComponent();
-            
+
             var step3 = new Step3ConfirmationControl(loginWizardState);
             step3.LoginSucceeded += () =>
             {

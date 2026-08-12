@@ -32,18 +32,28 @@ namespace MiniDocumentNotifier.WinForms.Forms
         private void InitializeComponent()
         {
             this.panel = new System.Windows.Forms.Panel();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel
             // 
+            this.panel.Controls.Add(this.lblStatus);
             this.panel.Controls.Add(this.progressBar);
             this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
             this.panel.Size = new System.Drawing.Size(800, 450);
             this.panel.TabIndex = 0;
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Location = new System.Drawing.Point(126, 180);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(588, 16);
+            this.lblStatus.TabIndex = 1;
+            this.lblStatus.Text = "label1";
             // 
             // progressBar
             // 
@@ -60,10 +70,13 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.panel);
             this.Name = "SplashScreenForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SplashScreenForm";
             this.panel.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Label lblStatus;
 
         private System.Windows.Forms.ProgressBar progressBar;
 

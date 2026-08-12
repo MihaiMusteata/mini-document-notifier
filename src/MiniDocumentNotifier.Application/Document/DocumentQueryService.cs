@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
-using MiniDocumentNotifier.Domain.Entities;
 using MiniDocumentNotifier.Domain.Repositories;
 
 namespace MiniDocumentNotifier.Application.Document

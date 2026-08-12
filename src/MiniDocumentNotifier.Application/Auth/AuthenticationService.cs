@@ -3,7 +3,6 @@ using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Entities;
 using MiniDocumentNotifier.Domain.Repositories;
-using MiniDocumentNotifier.Infrastructure.Security;
 
 namespace MiniDocumentNotifier.Application.Auth
 {

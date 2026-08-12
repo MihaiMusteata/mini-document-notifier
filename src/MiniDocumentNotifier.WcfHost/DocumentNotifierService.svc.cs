@@ -9,7 +9,6 @@ using MiniDocumentNotifier.Contracts;
 using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
-using MiniDocumentNotifier.Domain.Repositories;
 
 namespace MiniDocumentNotifier.WcfHost
 {

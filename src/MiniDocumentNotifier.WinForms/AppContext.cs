@@ -1,12 +1,14 @@
-using System;
-using System.Configuration;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Models;
 using MiniDocumentNotifier.Infrastructure.Concurrency;
-using MiniDocumentNotifier.Infrastructure.Preferences;
 using MiniDocumentNotifier.WinForms.Forms;
+using MiniDocumentNotifier.WinForms.UnityBootstrapper;
 using MiniDocumentNotifier.WinForms.Wizard;
+using Unity;
+using Unity.Resolution;
 
 namespace MiniDocumentNotifier.WinForms
 {
@@ -16,25 +18,34 @@ namespace MiniDocumentNotifier.WinForms
         private bool _loginSucceeded;
         private readonly LoginWizardState _loginWizardState = new LoginWizardState();
         private readonly IUserPreferencesStore _userPreferencesStore;
-        private readonly UserPreferences _userPreferences;
+        private UserPreferences _userPreferences;
 
         public AppContext()
         {
-            var path = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["UserPreferencesPath"]);
-            _userPreferencesStore = new JsonUserPreferencesStore(path);
-            _userPreferences = _userPreferencesStore.Load();
-            _loginWizardState.Username = _userPreferences.LastUsername;
+            _userPreferencesStore = Bootstrapper.Container.Resolve<IUserPreferencesStore>();
 
-            var splashScreen = new SplashScreenForm();
+            var splashScreen = Bootstrapper.Container.Resolve<SplashScreenForm>();
+            splashScreen.InitializationSteps += () => RunStartupSequence(splashScreen);
             splashScreen.FormClosed += SplashScreenForm_FormClosed;
             splashScreen.Show();
         }
 
+        private async Task RunStartupSequence(SplashScreenForm splashScreen)
+        {
+            splashScreen.SetStatus("The preferences are loading...");
+            _userPreferences = await Task.Run(() => _userPreferencesStore.Load());
+            _loginWizardState.Username = _userPreferences.LastUsername;
+
+
+            splashScreen.SetStatus("Checking Background App...");
+            _isBackgroundAppRunning = await Task.Run(CheckBackgroundAppRunning);
+        }
+
         private void SplashScreenForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _isBackgroundAppRunning = CheckBackgroundAppRunning();
+            var loginWizardForm = Bootstrapper.Container.Resolve<LoginWizardForm>(
+                new ParameterOverride("loginWizardState", _loginWizardState));
 
-            var loginWizardForm = new LoginWizardForm(_loginWizardState);
             loginWizardForm.LoginSucceeded += () => _loginSucceeded = true;
             loginWizardForm.FormClosed += LoginWizardForm_FormClosed;
             loginWizardForm.Show();
@@ -51,7 +62,10 @@ namespace MiniDocumentNotifier.WinForms
             _userPreferences.LastUsername = _loginWizardState.Username;
             _userPreferencesStore.Save(_userPreferences);
 
-            var mainForm = new MainForm(_isBackgroundAppRunning, _loginWizardState.InstitutionId, _userPreferencesStore);
+            var mainForm = Bootstrapper.Container.Resolve<MainForm>(
+                new ParameterOverride("isBackgroundAppRunning", _isBackgroundAppRunning),
+                new ParameterOverride("institutionId", _loginWizardState.InstitutionId));
+
             mainForm.FormClosed += (s, args) => { ExitThread(); };
             mainForm.Show();
         }
@@ -60,6 +74,8 @@ namespace MiniDocumentNotifier.WinForms
         {
             using (var signal = new SemaphoreBackgroundAppSignal(Constants.BackgroundAppSemaphoreName))
             {
+                // just for checking if UI doesn't freeze during this call
+                Thread.Sleep(2000);
                 return signal.IsActive();
             }
         }

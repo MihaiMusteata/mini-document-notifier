@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -9,7 +7,6 @@ using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Enums;
 using MiniDocumentNotifier.Domain.Models;
-using MiniDocumentNotifier.Infrastructure.ViewConfiguration;
 using MiniDocumentNotifier.WinForms.Services;
 
 namespace MiniDocumentNotifier.WinForms.Forms
@@ -18,16 +15,18 @@ namespace MiniDocumentNotifier.WinForms.Forms
     {
         private readonly bool _isBackgroundAppRunning;
         private readonly int _institutionId;
+        private readonly IViewConfigurationStore _viewConfigurationStore;
         private InstitutionViewConfiguration _institutionConfiguration;
         private readonly UserPreferences _preferences;
         private List<DocumentRow> _rows = new List<DocumentRow>();
         private bool _suppressWidthCapture;
 
-        public MainForm(bool isBackgroundAppRunning, int institutionId, IUserPreferencesStore preferencesStore)
+        public MainForm(IUserPreferencesStore preferencesStore, IViewConfigurationStore viewConfigurationStore, bool isBackgroundAppRunning, int institutionId)
         {
             InitializeComponent();
             _isBackgroundAppRunning = isBackgroundAppRunning;
             _institutionId = institutionId;
+            _viewConfigurationStore = viewConfigurationStore;
             _preferences = preferencesStore.Load();
 
             CheckConfiguration();
@@ -37,12 +36,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
 
         private void CheckConfiguration()
         {
-            var stalenessThresholdHours =
-                int.Parse(ConfigurationManager.AppSettings["ViewConfigStalenessThresholdHours"]);
-            var viewConfigPath = ConfigurationManager.AppSettings["ViewConfigPath"];
-            var store = new JsonViewConfigurationStore(TimeSpan.FromHours(stalenessThresholdHours), viewConfigPath);
-
-            var result = store.Load();
+            var result = _viewConfigurationStore.Load();
 
             if (result.FileExists && !result.IsStale && _isBackgroundAppRunning)
             {
