@@ -1,3 +1,6 @@
+using System.Windows.Input;
+using MiniDocumentNotifier.WpfControls.Commands;
+
 namespace MiniDocumentNotifier.WpfControls.ViewModels
 {
     public class Step2CredentialsViewModel : ViewModelBase
@@ -5,6 +8,13 @@ namespace MiniDocumentNotifier.WpfControls.ViewModels
         private string _username;
         private string _password;
         private bool _isPasswordVisible;
+
+        public Step2CredentialsViewModel()
+        {
+            TogglePasswordVisibilityCommand = new RelayCommand(() => IsPasswordVisible = !IsPasswordVisible);
+        }
+
+        public ICommand TogglePasswordVisibilityCommand { get; }
 
         public string Username
         {
@@ -21,8 +31,15 @@ namespace MiniDocumentNotifier.WpfControls.ViewModels
         public bool IsPasswordVisible
         {
             get => _isPasswordVisible;
-            set => SetField(ref _isPasswordVisible, value);
+            set
+            {
+                if (_isPasswordVisible == value) return;
+                _isPasswordVisible = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PasswordToggleLabel));
+            }
         }
 
+        public string PasswordToggleLabel => _isPasswordVisible ? "Hide password" : "Show password";
     }
 }
