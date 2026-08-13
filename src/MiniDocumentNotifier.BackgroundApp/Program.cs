@@ -1,4 +1,5 @@
 ﻿
+using MiniDocumentNotifier.BackgroundApp.UnityBootstrapper;
 using MiniDocumentNotifier.Infrastructure.Concurrency;
 
 namespace MiniDocumentNotifier.BackgroundApp

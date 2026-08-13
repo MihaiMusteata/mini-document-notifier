@@ -3,7 +3,8 @@ using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
 using MiniDocumentNotifier.Application.Sync;
-using MiniDocumentNotifier.BackgroundApp.Client;
+using MiniDocumentNotifier.BackgroundApp.UnityBootstrapper;
+using Unity;
 
 namespace MiniDocumentNotifier.BackgroundApp
 {
@@ -12,33 +13,28 @@ namespace MiniDocumentNotifier.BackgroundApp
         public static void Run()
         {
             var intervalSeconds = int.Parse(ConfigurationManager.AppSettings["IntervalSeconds"]);
-            var outputFilePath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["OutputFilePath"]);
+            var syncService = Bootstrapper.Container.Resolve<IViewConfigurationSyncService>();
 
-            using (var client = new ViewConfigurationSyncServiceClient())
+            while (true)
             {
-                var syncService = new ViewConfigurationSyncService(client, outputFilePath);
-
-                while (true)
+                try
                 {
-                    try
-                    {
-                        syncService.SyncAll();
-                    }
-                    catch (CommunicationException ex)
-                    {
-                        Console.Error.WriteLine($"WCF Host communication error: {ex.Message}");
-                    }
-                    catch (TimeoutException ex)
-                    {
-                        Console.Error.WriteLine($"WCF Host timeout: {ex.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Error.WriteLine($"Error: {ex.Message}");
-                    }
-
-                    Thread.Sleep(TimeSpan.FromSeconds(intervalSeconds));
+                    syncService.SyncAll();
                 }
+                catch (CommunicationException ex)
+                {
+                    Console.Error.WriteLine($"WCF Host communication error: {ex.Message}");
+                }
+                catch (TimeoutException ex)
+                {
+                    Console.Error.WriteLine($"WCF Host timeout: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Error: {ex.Message}");
+                }
+
+                Thread.Sleep(TimeSpan.FromSeconds(intervalSeconds));
             }
         }
     }
