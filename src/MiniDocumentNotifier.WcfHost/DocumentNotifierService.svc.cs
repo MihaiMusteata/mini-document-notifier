@@ -5,10 +5,11 @@ using System.ServiceModel;
 using MiniDocumentNotifier.Application.Auth;
 using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Application.Institution;
-using MiniDocumentNotifier.Contracts;
 using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
+using MiniDocumentNotifier.Contracts.ServiceContracts;
+using MiniDocumentNotifier.Domain.Repositories;
 
 namespace MiniDocumentNotifier.WcfHost
 {

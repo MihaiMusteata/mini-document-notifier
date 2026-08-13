@@ -1,5 +1,4 @@
 using System.IO;
-using MiniDocumentNotifier.Domain.Repositories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -7,26 +6,26 @@ namespace MiniDocumentNotifier.Application.Sync
 {
     public class ViewConfigurationSyncService : IViewConfigurationSyncService
     {
-        private readonly IViewConfigurationRepository _viewConfigurationRepository;
+        private readonly IViewConfigurationSyncServiceClient _client;
         private readonly string _outputFilePath;
 
-        public ViewConfigurationSyncService(IViewConfigurationRepository viewConfigurationRepository, string outputFilePath)
+        public ViewConfigurationSyncService(IViewConfigurationSyncServiceClient client, string outputFilePath)
         {
-            _viewConfigurationRepository = viewConfigurationRepository;
+            _client = client;
             _outputFilePath = outputFilePath;
         }
 
         public void SyncAll()
         {
             var root = new JArray();
-            var viewConfigurations = _viewConfigurationRepository.GetAllWithInstitutions();
+            var viewConfigurations = _client.GetAllViewConfigurations();
 
             foreach (var configuration in viewConfigurations)
             {
                 root.Add(new JObject
                 {
-                    ["institutionId"] = configuration.Institution.Id,
-                    ["institutionCode"] = configuration.Institution.Code,
+                    ["institutionId"] = configuration.InstitutionId,
+                    ["institutionCode"] = configuration.InstitutionCode,
                     ["visibleColumns"] = JToken.Parse(configuration.VisibleColumns),
                     ["activeCategories"] = JToken.Parse(configuration.ActiveCategories),
                     ["lastUpdatedDate"] = configuration.LastUpdatedDate

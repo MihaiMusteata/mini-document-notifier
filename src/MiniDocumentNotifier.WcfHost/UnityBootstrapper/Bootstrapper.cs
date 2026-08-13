@@ -1,6 +1,7 @@
 using MiniDocumentNotifier.Application.Auth;
 using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Application.Institution;
+using MiniDocumentNotifier.Application.ViewConfiguration;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Repositories;
 using MiniDocumentNotifier.Infrastructure.Security;
@@ -20,11 +21,13 @@ namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
             container.RegisterType<IUserRepository, UserRepository>();
             container.RegisterType<IInstitutionRepository, InstitutionRepository>();
             container.RegisterType<IDocumentRepository, DocumentRepository>();
+            container.RegisterType<IViewConfigurationRepository, ViewConfigurationRepository>();
             
             container.RegisterType<IPasswordHasher, Pbkdf2PasswordHasher>();
             container.RegisterType<IAuthenticationService, AuthenticationService>();
             container.RegisterType<IInstitutionQueryService, InstitutionQueryService>();
             container.RegisterType<IDocumentQueryService, DocumentQueryService>();
+            container.RegisterType<IViewConfigurationQueryService, ViewConfigurationQueryService>();
 
             return container;
         }

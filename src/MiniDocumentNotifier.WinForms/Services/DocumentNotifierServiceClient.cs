@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
-using MiniDocumentNotifier.Contracts;
 using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
+using MiniDocumentNotifier.Contracts.ServiceContracts;
 
 namespace MiniDocumentNotifier.WinForms.Services
 {

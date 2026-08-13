@@ -4,7 +4,7 @@ using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 
-namespace MiniDocumentNotifier.Contracts
+namespace MiniDocumentNotifier.Contracts.ServiceContracts
 {
     [ServiceContract]
     public interface IDocumentNotifierService

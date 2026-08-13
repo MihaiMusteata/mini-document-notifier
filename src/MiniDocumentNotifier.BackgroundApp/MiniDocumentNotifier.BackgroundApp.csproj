@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\ViewConfigurationSyncServiceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyncWorker.cs" />
@@ -55,6 +57,10 @@
     <ProjectReference Include="..\MiniDocumentNotifier.Application\MiniDocumentNotifier.Application.csproj">
       <Project>{791c5964-767d-42ec-9378-0f58d7e4a18f}</Project>
       <Name>MiniDocumentNotifier.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Contracts\MiniDocumentNotifier.Contracts.csproj">
+      <Project>{28fa09cc-5d56-4cf8-8415-0e49cebf0798}</Project>
+      <Name>MiniDocumentNotifier.Contracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
       <Project>{d85c8837-8be6-4630-8b25-738de5d418ad}</Project>

@@ -68,7 +68,10 @@
         <Compile Include="Institution\InstitutionQueryService.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Sync\IViewConfigurationSyncService.cs" />
+        <Compile Include="Sync\IViewConfigurationSyncServiceClient.cs" />
         <Compile Include="Sync\ViewConfigurationSyncService.cs" />
+        <Compile Include="ViewConfiguration\IViewConfigurationQueryService.cs" />
+        <Compile Include="ViewConfiguration\ViewConfigurationQueryService.cs" />
     </ItemGroup>
 
     <ItemGroup>

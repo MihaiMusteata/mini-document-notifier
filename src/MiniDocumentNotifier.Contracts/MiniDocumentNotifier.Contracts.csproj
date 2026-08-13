@@ -55,9 +55,12 @@
     <Compile Include="AuthContracts\LoginRequest.cs" />
     <Compile Include="AuthContracts\LoginResult.cs" />
     <Compile Include="DocumentContracts\DocumentDto.cs" />
-    <Compile Include="IDocumentNotifierService.cs" />
     <Compile Include="InstitutionContracts\InstitutionDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceContracts\IDocumentNotifierService.cs" />
+    <Compile Include="ServiceContracts\IViewConfigurationService.cs" />
+    <Compile Include="ViewConfigurationContracts\ViewConfigurationDto.cs" />
+    <Compile Include="ViewConfigurationContracts\ViewConfigurationFault.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">

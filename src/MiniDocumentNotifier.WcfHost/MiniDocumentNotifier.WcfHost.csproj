@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DocumentNotifierService.svc" />
+    <Content Include="ViewConfigurationService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +84,9 @@
     <Compile Include="UnityBootstrapper\UnityInstanceProvider.cs" />
     <Compile Include="UnityBootstrapper\UnityServiceBehavior.cs" />
     <Compile Include="UnityBootstrapper\UnityServiceHostFactory.cs" />
+    <Compile Include="ViewConfigurationSyncService.svc.cs">
+      <DependentUpon>ViewConfigurationService.svc</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
