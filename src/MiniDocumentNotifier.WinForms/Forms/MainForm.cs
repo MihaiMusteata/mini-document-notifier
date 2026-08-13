@@ -39,19 +39,35 @@ namespace MiniDocumentNotifier.WinForms.Forms
         {
             var result = _viewConfigurationStore.Load();
 
-            if (result.FileExists && !result.IsStale && _isBackgroundAppRunning)
+            if (!result.FileExists || result.IsStale || !_isBackgroundAppRunning)
             {
-                _institutionConfiguration = result.Institutions?.FirstOrDefault(i => i.InstitutionId == _institutionId);
+                var message = !result.FileExists ? "Configuration file not found." :
+                    result.IsStale ? "Configuration file is stale." : "";
+
+                if (!_isBackgroundAppRunning)
+                    message += " Background App is not running.";
+
+                ShowWarning(message);
                 return;
             }
 
-            var message = !result.FileExists ? "Configuration file not found." :
-                result.IsStale ? "Configuration file is stale." : "";
+            _institutionConfiguration = result.Institutions?.FirstOrDefault(i => i.InstitutionId == _institutionId);
 
-            if (!_isBackgroundAppRunning)
-                message += " Background App is not running.";
+            if (_institutionConfiguration == null)
+            {
+                ShowWarning("No view configuration found for this institution. Showing all documents.");
+            }
+        }
 
-            MessageBox.Show(this, message, "Configuration Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        private void ShowWarning(string message)
+        {
+            lblWarning.Text = message;
+            warningPanel.Visible = true;
+        }
+
+        private void btnDismissWarning_Click(object sender, EventArgs e)
+        {
+            warningPanel.Visible = false;
         }
 
         private async Task LoadDocumentsAsync()
