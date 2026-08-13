@@ -1,3 +1,4 @@
+using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -51,6 +52,10 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
                 cmbSelectInstitution.Enabled = true;
                 _loaded = true;
             }
+            catch (FaultException<InstitutionFault> fault)
+            {
+                MessageBox.Show(this, fault.Detail.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (EndpointNotFoundException)
             {
                 MessageBox.Show(this, "Service is not available", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -58,6 +63,10 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
             catch (CommunicationException)
             {
                 MessageBox.Show(this, "Communication error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (TimeoutException)
+            {
+                MessageBox.Show(this, "The service did not respond in time", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {

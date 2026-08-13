@@ -14,10 +14,11 @@ namespace MiniDocumentNotifier.Contracts.ServiceContracts
         LoginResult Login(LoginRequest request);
 
         [OperationContract]
+        [FaultContract(typeof(InstitutionFault))]
         List<InstitutionDto> GetInstitutions();
-        
+
         [OperationContract]
+        [FaultContract(typeof(DocumentFault))]
         List<DocumentDto> GetDocuments(int institutionId);
-        
     }
 }

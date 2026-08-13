@@ -65,6 +65,11 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
                 MessageBox.Show(this, "Communication error with service", "Eroare", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+            catch (TimeoutException)
+            {
+                MessageBox.Show(this, "The service did not respond in time", "Eroare", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
             finally
             {
                 btnLogin.Enabled = true;

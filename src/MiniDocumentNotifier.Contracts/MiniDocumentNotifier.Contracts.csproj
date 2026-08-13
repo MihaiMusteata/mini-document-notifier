@@ -55,7 +55,9 @@
     <Compile Include="AuthContracts\LoginRequest.cs" />
     <Compile Include="AuthContracts\LoginResult.cs" />
     <Compile Include="DocumentContracts\DocumentDto.cs" />
+    <Compile Include="DocumentContracts\DocumentFault.cs" />
     <Compile Include="InstitutionContracts\InstitutionDto.cs" />
+    <Compile Include="InstitutionContracts\InstitutionFault.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceContracts\IDocumentNotifierService.cs" />
     <Compile Include="ServiceContracts\IViewConfigurationService.cs" />

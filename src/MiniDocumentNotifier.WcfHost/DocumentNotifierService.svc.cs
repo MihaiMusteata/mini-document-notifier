@@ -53,9 +53,10 @@ namespace MiniDocumentNotifier.WcfHost
                 var institutions = _institutionQueryService.GetAll();
                 return institutions;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message }, new FaultReason("Failed."));
+                throw new FaultException<InstitutionFault>(
+                    new InstitutionFault { Message = "Error getting institutions" }, new FaultReason("Failed."));
             }
         }
 
@@ -66,9 +67,10 @@ namespace MiniDocumentNotifier.WcfHost
                 var documents = _documentQueryService.GetByInstitution(institutionId);
                 return documents;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new FaultException(ex.ToString());
+                throw new FaultException<DocumentFault>(
+                    new DocumentFault { Message = "Error getting documents" }, new FaultReason("Failed."));
             }
         }
     }

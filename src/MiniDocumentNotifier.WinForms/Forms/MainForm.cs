@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -81,6 +82,10 @@ namespace MiniDocumentNotifier.WinForms.Forms
                 ApplyColumnWidths();
                 _suppressWidthCapture = false;
             }
+            catch (FaultException<DocumentFault> fault)
+            {
+                MessageBox.Show(this, fault.Detail.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (EndpointNotFoundException)
             {
                 MessageBox.Show(this, "Service is not available.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -88,6 +93,10 @@ namespace MiniDocumentNotifier.WinForms.Forms
             catch (CommunicationException)
             {
                 MessageBox.Show(this, "Communication error with the service.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (TimeoutException)
+            {
+                MessageBox.Show(this, "The service did not respond in time.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
