@@ -22,7 +22,8 @@ namespace MiniDocumentNotifier.Application.ViewConfiguration
                     InstitutionId = entity.Institution.Id,
                     InstitutionCode = entity.Institution.Code,
                     VisibleColumns = entity.VisibleColumns,
-                    ActiveCategories = entity.ActiveCategories
+                    ActiveCategories = entity.ActiveCategories,
+                    LastUpdatedDate = entity.LastUpdatedDate
                 })
                 .ToList();
         }

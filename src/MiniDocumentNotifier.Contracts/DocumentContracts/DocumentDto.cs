@@ -21,7 +21,7 @@ namespace MiniDocumentNotifier.Contracts.DocumentContracts
         public static Dictionary<DocumentType, string> DocumentTypeLabels =
             new Dictionary<DocumentType, string>
             {
-                { DocumentType.Notification, "Statement" },
+                { DocumentType.Notification, "Notification" },
                 { DocumentType.Statement, "Statement" },
                 { DocumentType.Contract, "Contract" },
                 { DocumentType.Circular, "Circular" }
