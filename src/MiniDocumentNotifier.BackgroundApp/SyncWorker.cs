@@ -12,7 +12,7 @@ namespace MiniDocumentNotifier.BackgroundApp
         public static void Run()
         {
             var intervalSeconds = int.Parse(ConfigurationManager.AppSettings["IntervalSeconds"]);
-            var outputFilePath = ConfigurationManager.AppSettings["OutputFilePath"];
+            var outputFilePath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["OutputFilePath"]);
 
             using (var client = new ViewConfigurationSyncServiceClient())
             {

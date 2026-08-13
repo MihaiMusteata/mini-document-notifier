@@ -20,7 +20,7 @@ namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
             var preferencesPath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["UserPreferencesPath"]);
             container.RegisterInstance<IUserPreferencesStore>(new JsonUserPreferencesStore(preferencesPath), new SingletonLifetimeManager());
 
-            var viewConfigPath = ConfigurationManager.AppSettings["ViewConfigPath"];
+            var viewConfigPath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["ViewConfigPath"]);
             var stalenessHours = int.Parse(ConfigurationManager.AppSettings["ViewConfigStalenessThresholdHours"]);
             container.RegisterInstance<IViewConfigurationStore>(new JsonViewConfigurationStore(TimeSpan.FromHours(stalenessHours), viewConfigPath), new SingletonLifetimeManager());
 
