@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniDocumentNotifier.Domain.Abstractions;
@@ -75,7 +74,7 @@ namespace MiniDocumentNotifier.WinForms
             using (var signal = new SemaphoreBackgroundAppSignal(Constants.BackgroundAppSemaphoreName))
             {
                 // just for checking if UI doesn't freeze during this call
-                Thread.Sleep(2000);
+                // Thread.Sleep(2000);
                 return signal.IsActive();
             }
         }

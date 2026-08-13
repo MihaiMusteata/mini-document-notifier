@@ -51,10 +51,12 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
             // txtInstitution
             // 
             this.txtInstitution.Location = new System.Drawing.Point(43, 45);
+            this.txtInstitution.Margin = new System.Windows.Forms.Padding(0);
             this.txtInstitution.Name = "txtInstitution";
             this.txtInstitution.ReadOnly = true;
             this.txtInstitution.Size = new System.Drawing.Size(301, 20);
             this.txtInstitution.TabIndex = 1;
+            this.txtInstitution.Text = "TEST";
             // 
             // txtUsername
             // 

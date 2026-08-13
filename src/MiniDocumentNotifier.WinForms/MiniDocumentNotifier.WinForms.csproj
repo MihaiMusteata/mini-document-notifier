@@ -36,6 +36,8 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -58,6 +60,8 @@
     <Reference Include="Unity.Container, Version=5.11.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unity.5.11.10\lib\net47\Unity.Container.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppContext.cs" />
@@ -157,6 +161,10 @@
     <ProjectReference Include="..\MiniDocumentNotifier.Infrastructure\MiniDocumentNotifier.Infrastructure.csproj">
       <Project>{800eb8ba-335f-4ddf-84c0-3037498f95ba}</Project>
       <Name>MiniDocumentNotifier.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.WpfControls\MiniDocumentNotifier.WpfControls.csproj">
+      <Project>{3e1e48c7-3864-4509-b51a-5a26387aa802}</Project>
+      <Name>MiniDocumentNotifier.WpfControls</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
