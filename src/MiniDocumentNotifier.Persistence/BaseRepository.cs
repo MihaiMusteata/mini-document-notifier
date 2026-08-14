@@ -19,6 +19,14 @@ namespace MiniDocumentNotifier.Persistence
 
             return sqlParameter;
         }
+
+        protected SqlParameter SetOutputParameter(string parameterName, SqlDbType dbType)
+        {
+            return new SqlParameter(parameterName, dbType)
+            {
+                Direction = ParameterDirection.Output
+            };
+        }
         
     }
 }

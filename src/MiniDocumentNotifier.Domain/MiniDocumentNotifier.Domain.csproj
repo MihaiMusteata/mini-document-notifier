@@ -50,7 +50,9 @@
     <Compile Include="Abstractions\IPasswordHasher.cs" />
     <Compile Include="Abstractions\IUserPreferencesStore.cs" />
     <Compile Include="Abstractions\IViewConfigurationStore.cs" />
+    <Compile Include="Models\DocumentQuery.cs" />
     <Compile Include="Models\InstitutionViewConfiguration.cs" />
+    <Compile Include="Models\PagedResult.cs" />
     <Compile Include="Models\UserPreferences.cs" />
     <Compile Include="Models\ViewConfigurationResult.cs" />
     <Compile Include="Entities\DocumentEntity.cs" />

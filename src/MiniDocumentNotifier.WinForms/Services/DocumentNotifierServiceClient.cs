@@ -23,6 +23,8 @@ namespace MiniDocumentNotifier.WinForms.Services
         public LoginResult Login(LoginRequest request) => _channelFactory.CreateChannel().Login(request);
         public List<InstitutionDto> GetInstitutions() => _channelFactory.CreateChannel().GetInstitutions();
         public List<DocumentDto> GetDocuments(int institutionId) => _channelFactory.CreateChannel().GetDocuments(institutionId);
+        public DocumentQueryResult GetDocumentsPaged(DocumentQueryRequest request) => _channelFactory.CreateChannel().GetDocumentsPaged(request);
+
 
 
         public void Dispose() => _channelFactory.Close();

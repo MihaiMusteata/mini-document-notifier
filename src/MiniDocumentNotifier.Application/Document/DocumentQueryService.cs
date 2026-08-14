@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
+using MiniDocumentNotifier.Domain.Models;
 using MiniDocumentNotifier.Domain.Repositories;
 
 namespace MiniDocumentNotifier.Application.Document
@@ -25,6 +26,25 @@ namespace MiniDocumentNotifier.Application.Document
                     Status = entity.Status,
                     UploadDate = entity.UploadDate
                 }).ToList();
+        }
+
+        public PagedResult<DocumentDto> GetPaged(DocumentQuery query)
+        {
+            var result = _repository.GetPaged(query);
+
+            return new PagedResult<DocumentDto>
+            {
+                Items = result.Items
+                    .Select(entity => new DocumentDto
+                    {
+                        Id = entity.Id,
+                        Name = entity.Name,
+                        Type = entity.Type,
+                        Status = entity.Status,
+                        UploadDate = entity.UploadDate
+                    }).ToList(),
+                TotalItems = result.TotalItems
+            };
         }
     }
 }

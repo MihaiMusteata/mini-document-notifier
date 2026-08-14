@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Authentication;
 using System.ServiceModel;
 using MiniDocumentNotifier.Application.Auth;
@@ -9,6 +10,8 @@ using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 using MiniDocumentNotifier.Contracts.ServiceContracts;
+using MiniDocumentNotifier.Domain.Enums;
+using MiniDocumentNotifier.Domain.Models;
 using MiniDocumentNotifier.Domain.Repositories;
 
 namespace MiniDocumentNotifier.WcfHost
@@ -66,6 +69,45 @@ namespace MiniDocumentNotifier.WcfHost
             {
                 var documents = _documentQueryService.GetByInstitution(institutionId);
                 return documents;
+            }
+            catch (Exception)
+            {
+                throw new FaultException<DocumentFault>(
+                    new DocumentFault { Message = "Error getting documents" }, new FaultReason("Failed."));
+            }
+        }
+
+        public DocumentQueryResult GetDocumentsPaged(DocumentQueryRequest request)
+        {
+            var query = new DocumentQuery
+            {
+                InstitutionId = request.InstitutionId,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                TypeFilter = request.TypeFilter,
+                StatusFilter = request.StatusFilter,
+                SortColumn = string.IsNullOrEmpty(request.SortColumn) ? "UploadDate" : request.SortColumn,
+                SortDirection = request.SortDirection,
+                AllowedTypes = request.AllowedTypes
+            };
+
+            try
+            {
+                var result = _documentQueryService.GetPaged(query);
+
+                return new DocumentQueryResult
+                {
+                    Total = result.TotalItems,
+                    Documents = result.Items.Select(d => new DocumentDto
+                    {
+                        Id = d.Id,
+                        InstitutionId = d.InstitutionId,
+                        Name = d.Name,
+                        Type = d.Type,
+                        Status = d.Status,
+                        UploadDate = d.UploadDate
+                    }).ToList()
+                };
             }
             catch (Exception)
             {
