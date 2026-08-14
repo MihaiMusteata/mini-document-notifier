@@ -1,25 +1,28 @@
 using System;
-using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
 using MiniDocumentNotifier.Application.Sync;
-using MiniDocumentNotifier.BackgroundApp.UnityBootstrapper;
-using Unity;
 
 namespace MiniDocumentNotifier.BackgroundApp
 {
-    public static class SyncWorker
+    public class SyncWorker
     {
-        public static void Run()
-        {
-            var intervalSeconds = int.Parse(ConfigurationManager.AppSettings["IntervalSeconds"]);
-            var syncService = Bootstrapper.Container.Resolve<IViewConfigurationSyncService>();
+        private readonly IViewConfigurationSyncService _syncService;
+        private readonly int _intervalSeconds;
 
+        public SyncWorker(IViewConfigurationSyncService syncService, int intervalSeconds)
+        {
+            _syncService = syncService;
+            _intervalSeconds = intervalSeconds;
+        }
+
+        public void Run()
+        {
             while (true)
             {
                 try
                 {
-                    syncService.SyncAll();
+                    _syncService.SyncAll();
                 }
                 catch (CommunicationException ex)
                 {
@@ -34,7 +37,7 @@ namespace MiniDocumentNotifier.BackgroundApp
                     Console.Error.WriteLine($"Error: {ex.Message}");
                 }
 
-                Thread.Sleep(TimeSpan.FromSeconds(intervalSeconds));
+                Thread.Sleep(TimeSpan.FromSeconds(_intervalSeconds));
             }
         }
     }

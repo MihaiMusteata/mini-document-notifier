@@ -1,10 +1,11 @@
 using System;
 using System.Configuration;
 using MiniDocumentNotifier.Domain.Abstractions;
+using MiniDocumentNotifier.Infrastructure.Concurrency;
 using MiniDocumentNotifier.Infrastructure.Preferences;
 using MiniDocumentNotifier.Infrastructure.ViewConfiguration;
-using MiniDocumentNotifier.WinForms.Forms;
 using Unity;
+using Unity.Injection;
 using Unity.Lifetime;
 
 namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
@@ -24,9 +25,12 @@ namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
             var stalenessHours = int.Parse(ConfigurationManager.AppSettings["ViewConfigStalenessThresholdHours"]);
             container.RegisterInstance<IViewConfigurationStore>(new JsonViewConfigurationStore(TimeSpan.FromHours(stalenessHours), viewConfigPath), new SingletonLifetimeManager());
 
-            container.RegisterType<SplashScreenForm>(new TransientLifetimeManager());
-            container.RegisterType<LoginWizardForm>(new TransientLifetimeManager());
-            container.RegisterType<MainForm>(new TransientLifetimeManager());
+            container.RegisterType<AppContext>(new TransientLifetimeManager());
+
+            container.RegisterType<ISingleInstanceGuard, MutexSingleInstanceGuard>(new TransientLifetimeManager(),
+                new InjectionConstructor(Constants.WinFormsMutexName));
+            container.RegisterType<IBackgroundAppSignal, SemaphoreBackgroundAppSignal>(new TransientLifetimeManager(),
+                new InjectionConstructor(Constants.BackgroundAppSemaphoreName));
 
             return container;
 

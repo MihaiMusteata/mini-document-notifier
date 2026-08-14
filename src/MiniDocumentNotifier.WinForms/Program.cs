@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 using MiniDocumentNotifier.Infrastructure.Concurrency;
+using MiniDocumentNotifier.WinForms.UnityBootstrapper;
+using Unity;
 
 namespace MiniDocumentNotifier.WinForms
 {
@@ -15,7 +17,7 @@ namespace MiniDocumentNotifier.WinForms
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            using (var guard = new MutexSingleInstanceGuard(Constants.WinFormsMutexName))
+            using (var guard = Bootstrapper.Container.Resolve<ISingleInstanceGuard>())
             {
                 if (!guard.TryAcquire())
                 {
@@ -24,7 +26,7 @@ namespace MiniDocumentNotifier.WinForms
                     return;
                 }
 
-                Application.Run(new AppContext());
+                Application.Run(Bootstrapper.Container.Resolve<AppContext>());
             }
         }
     }

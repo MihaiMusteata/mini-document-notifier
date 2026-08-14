@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using MiniDocumentNotifier.Application.Sync;
 using MiniDocumentNotifier.BackgroundApp.Client;
+using MiniDocumentNotifier.Infrastructure.Concurrency;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
@@ -24,6 +25,15 @@ namespace MiniDocumentNotifier.BackgroundApp.UnityBootstrapper
             container.RegisterType<IViewConfigurationSyncService, ViewConfigurationSyncService>(
                 new ContainerControlledLifetimeManager(),
                 new InjectionConstructor(typeof(IViewConfigurationSyncServiceClient), outputFilePath));
+
+            container.RegisterType<ISingleInstanceGuard, MutexSingleInstanceGuard>(new TransientLifetimeManager(),
+                new InjectionConstructor(Constants.BackgroundAppMutexName));
+            container.RegisterType<IBackgroundAppSignal, SemaphoreBackgroundAppSignal>(new TransientLifetimeManager(),
+                new InjectionConstructor(Constants.BackgroundAppSemaphoreName));
+
+            var intervalSeconds = int.Parse(ConfigurationManager.AppSettings["IntervalSeconds"]);
+            container.RegisterType<SyncWorker>(new TransientLifetimeManager(),
+                new InjectionConstructor(typeof(IViewConfigurationSyncService), intervalSeconds));
 
             return container;
         }
