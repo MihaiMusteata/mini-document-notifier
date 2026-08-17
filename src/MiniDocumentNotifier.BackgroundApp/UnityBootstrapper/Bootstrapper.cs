@@ -32,8 +32,9 @@ namespace MiniDocumentNotifier.BackgroundApp.UnityBootstrapper
                 new InjectionConstructor(Constants.BackgroundAppSemaphoreName));
 
             var intervalSeconds = int.Parse(ConfigurationManager.AppSettings["IntervalSeconds"]);
+            var maxBackoffSeconds = int.Parse(ConfigurationManager.AppSettings["MaxBackoffSeconds"]);
             container.RegisterType<SyncWorker>(new TransientLifetimeManager(),
-                new InjectionConstructor(typeof(IViewConfigurationSyncService), intervalSeconds));
+                new InjectionConstructor(typeof(IViewConfigurationSyncService), intervalSeconds, maxBackoffSeconds));
 
             return container;
         }
