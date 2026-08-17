@@ -48,10 +48,14 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.lblPageInfo = new System.Windows.Forms.Label();
             this.btnNextPage = new System.Windows.Forms.Button();
             this.searchDebounceTimer = new System.Windows.Forms.Timer(this.components);
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.documentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentsDataGrid)).BeginInit();
             this.warningPanel.SuspendLayout();
             this.filterPanel.SuspendLayout();
             this.paginationPanel.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // documentsDataGrid
@@ -61,13 +65,13 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.documentsDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.documentsDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.documentsDataGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.documentsDataGrid.Location = new System.Drawing.Point(0, 71);
+            this.documentsDataGrid.Location = new System.Drawing.Point(0, 95);
             this.documentsDataGrid.MultiSelect = false;
             this.documentsDataGrid.Name = "documentsDataGrid";
             this.documentsDataGrid.ReadOnly = true;
             this.documentsDataGrid.RowHeadersVisible = false;
             this.documentsDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.documentsDataGrid.Size = new System.Drawing.Size(800, 337);
+            this.documentsDataGrid.Size = new System.Drawing.Size(800, 313);
             this.documentsDataGrid.TabIndex = 0;
             this.documentsDataGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.documentsDataGrid_ColumnHeaderMouseClick);
             this.documentsDataGrid.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.documentsDataGrid_ColumnWidthChanged);
@@ -78,7 +82,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.warningPanel.Controls.Add(this.lblWarning);
             this.warningPanel.Controls.Add(this.btnDismissWarning);
             this.warningPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.warningPanel.Location = new System.Drawing.Point(0, 0);
+            this.warningPanel.Location = new System.Drawing.Point(0, 24);
             this.warningPanel.Name = "warningPanel";
             this.warningPanel.Size = new System.Drawing.Size(800, 30);
             this.warningPanel.TabIndex = 1;
@@ -116,7 +120,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.filterPanel.Controls.Add(this.lblStatusFilter);
             this.filterPanel.Controls.Add(this.cmbStatusFilter);
             this.filterPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.filterPanel.Location = new System.Drawing.Point(0, 30);
+            this.filterPanel.Location = new System.Drawing.Point(0, 54);
             this.filterPanel.Name = "filterPanel";
             this.filterPanel.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
             this.filterPanel.Size = new System.Drawing.Size(800, 41);
@@ -232,6 +236,30 @@ namespace MiniDocumentNotifier.WinForms.Forms
             // 
             this.searchDebounceTimer.Tick += new System.EventHandler(this.searchDebounceTimer_Tick);
             // 
+            // menuStrip
+            // 
+            this.menuStrip.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.documentToolStripMenuItem });
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip.TabIndex = 4;
+            this.menuStrip.Text = "menuStrip";
+            // 
+            // documentToolStripMenuItem
+            // 
+            this.documentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.uploadToolStripMenuItem });
+            this.documentToolStripMenuItem.Name = "documentToolStripMenuItem";
+            this.documentToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.documentToolStripMenuItem.Text = "File";
+            // 
+            // uploadToolStripMenuItem
+            // 
+            this.uploadToolStripMenuItem.Name = "uploadToolStripMenuItem";
+            this.uploadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.uploadToolStripMenuItem.Text = "Upload";
+            this.uploadToolStripMenuItem.Click += new System.EventHandler(this.uploadToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -241,6 +269,8 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.Controls.Add(this.paginationPanel);
             this.Controls.Add(this.filterPanel);
             this.Controls.Add(this.warningPanel);
+            this.Controls.Add(this.menuStrip);
+            this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainForm";
@@ -250,9 +280,15 @@ namespace MiniDocumentNotifier.WinForms.Forms
             this.filterPanel.PerformLayout();
             this.paginationPanel.ResumeLayout(false);
             this.paginationPanel.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem documentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uploadToolStripMenuItem;
 
         private System.Windows.Forms.Timer searchDebounceTimer;
 

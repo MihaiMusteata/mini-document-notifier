@@ -5,7 +5,7 @@ namespace MiniDocumentNotifier.Domain.Models
     public class UserPreferences
     {
         public string DefaultSortColumn { get; set; }
-        public bool DefaultSortDescending { get; set; }
+        public bool DefaultSortDirection { get; set; }
         public string LastUsername { get; set; }
         public Dictionary<string, float> ColumnWidths { get; set; }
 
@@ -14,7 +14,7 @@ namespace MiniDocumentNotifier.Domain.Models
             return new UserPreferences
             {
                 DefaultSortColumn = "UploadDate",
-                DefaultSortDescending = true,
+                DefaultSortDirection = true,
                 LastUsername = null,
                 ColumnWidths = new Dictionary<string, float>()
             };

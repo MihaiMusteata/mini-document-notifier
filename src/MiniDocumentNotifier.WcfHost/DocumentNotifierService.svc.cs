@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Authentication;
 using System.ServiceModel;
 using MiniDocumentNotifier.Application.Auth;
@@ -10,9 +9,7 @@ using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 using MiniDocumentNotifier.Contracts.ServiceContracts;
-using MiniDocumentNotifier.Domain.Enums;
 using MiniDocumentNotifier.Domain.Models;
-using MiniDocumentNotifier.Domain.Repositories;
 
 namespace MiniDocumentNotifier.WcfHost
 {
@@ -98,15 +95,7 @@ namespace MiniDocumentNotifier.WcfHost
                 return new DocumentQueryResult
                 {
                     Total = result.TotalItems,
-                    Documents = result.Items.Select(d => new DocumentDto
-                    {
-                        Id = d.Id,
-                        InstitutionId = d.InstitutionId,
-                        Name = d.Name,
-                        Type = d.Type,
-                        Status = d.Status,
-                        UploadDate = d.UploadDate
-                    }).ToList()
+                    Documents = result.Items
                 };
             }
             catch (Exception)

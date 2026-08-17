@@ -115,7 +115,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
                     TypeFilter = _gridState.TypeFilter,
                     StatusFilter = _gridState.StatusFilter,
                     SortColumn = _preferences.DefaultSortColumn,
-                    SortDirection = _preferences.DefaultSortDescending
+                    SortDirection = _preferences.DefaultSortDirection
                 };
 
                 var result = await Task.Run(() =>
@@ -212,10 +212,10 @@ namespace MiniDocumentNotifier.WinForms.Forms
         private async void documentsDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             var columnName = documentsDataGrid.Columns[e.ColumnIndex].Name;
-            var descending = _preferences.DefaultSortColumn == columnName && !_preferences.DefaultSortDescending;
+            var descending = _preferences.DefaultSortColumn == columnName && !_preferences.DefaultSortDirection;
 
             _preferences.DefaultSortColumn = columnName;
-            _preferences.DefaultSortDescending = descending;
+            _preferences.DefaultSortDirection = descending;
 
             await LoadPageAsync();
         }
@@ -275,6 +275,11 @@ namespace MiniDocumentNotifier.WinForms.Forms
             searchDebounceTimer.Stop();
             _gridState.CurrentPage = 0;
             await LoadPageAsync();
+        }
+
+        private void uploadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

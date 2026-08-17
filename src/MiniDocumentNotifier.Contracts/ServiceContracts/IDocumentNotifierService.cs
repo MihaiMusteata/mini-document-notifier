@@ -3,7 +3,6 @@ using System.ServiceModel;
 using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
-using MiniDocumentNotifier.Domain.Models;
 
 namespace MiniDocumentNotifier.Contracts.ServiceContracts
 {
