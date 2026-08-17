@@ -4,6 +4,7 @@ using System.Configuration;
 using System.ServiceModel;
 using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
+using MiniDocumentNotifier.Contracts.DocumentUploadContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 using MiniDocumentNotifier.Contracts.ServiceContracts;
 
@@ -24,8 +25,7 @@ namespace MiniDocumentNotifier.WinForms.Services
         public List<InstitutionDto> GetInstitutions() => _channelFactory.CreateChannel().GetInstitutions();
         public List<DocumentDto> GetDocuments(int institutionId) => _channelFactory.CreateChannel().GetDocuments(institutionId);
         public DocumentQueryResult GetDocumentsPaged(DocumentQueryRequest request) => _channelFactory.CreateChannel().GetDocumentsPaged(request);
-
-
+        public DocumentUploadResult UploadDocument(DocumentUploadRequest request) => _channelFactory.CreateChannel().UploadDocument(request);
 
         public void Dispose() => _channelFactory.Close();
     }

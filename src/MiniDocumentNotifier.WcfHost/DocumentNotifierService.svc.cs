@@ -7,6 +7,7 @@ using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Application.Institution;
 using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
+using MiniDocumentNotifier.Contracts.DocumentUploadContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 using MiniDocumentNotifier.Contracts.ServiceContracts;
 using MiniDocumentNotifier.Domain.Models;
@@ -18,13 +19,16 @@ namespace MiniDocumentNotifier.WcfHost
         private readonly IAuthenticationService _authenticationService;
         private readonly IInstitutionQueryService _institutionQueryService;
         private readonly IDocumentQueryService _documentQueryService;
+        private readonly IDocumentUploadService _documentUploadService;
 
         public DocumentNotifierService(IAuthenticationService authenticationService,
-            IInstitutionQueryService institutionQueryService, IDocumentQueryService documentQueryService)
+            IInstitutionQueryService institutionQueryService, IDocumentQueryService documentQueryService,
+            IDocumentUploadService documentUploadService)
         {
             _authenticationService = authenticationService;
             _institutionQueryService = institutionQueryService;
             _documentQueryService = documentQueryService;
+            _documentUploadService = documentUploadService;
         }
 
         public LoginResult Login(LoginRequest request)
@@ -102,6 +106,22 @@ namespace MiniDocumentNotifier.WcfHost
             {
                 throw new FaultException<DocumentFault>(
                     new DocumentFault { Message = "Error getting documents" }, new FaultReason("Failed."));
+            }
+        }
+
+        public DocumentUploadResult UploadDocument(DocumentUploadRequest request)
+        {
+            try
+            {
+                var documentId = _documentUploadService.Upload(request);
+                return new DocumentUploadResult
+                {
+                    DocumentId = documentId,
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new FaultException<DocumentUploadFault>(new DocumentUploadFault { Message = ex.Message });
             }
         }
     }

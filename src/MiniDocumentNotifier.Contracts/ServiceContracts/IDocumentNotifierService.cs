@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using MiniDocumentNotifier.Contracts.AuthContracts;
 using MiniDocumentNotifier.Contracts.DocumentContracts;
+using MiniDocumentNotifier.Contracts.DocumentUploadContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 
 namespace MiniDocumentNotifier.Contracts.ServiceContracts
@@ -24,5 +25,9 @@ namespace MiniDocumentNotifier.Contracts.ServiceContracts
         [OperationContract]
         [FaultContract(typeof(DocumentFault))]
         DocumentQueryResult GetDocumentsPaged(DocumentQueryRequest request);
+        
+        [OperationContract]
+        [FaultContract(typeof(DocumentUploadFault))]
+        DocumentUploadResult UploadDocument(DocumentUploadRequest request);
     }
 }

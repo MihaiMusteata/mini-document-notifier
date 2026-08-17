@@ -8,5 +8,6 @@ namespace MiniDocumentNotifier.Domain.Repositories
     {
         List<DocumentEntity> GetByInstitution(int institutionId);
         PagedResult<DocumentEntity> GetPaged(DocumentQuery query);
+        int Insert(DocumentEntity document);
     }
 }

@@ -58,6 +58,9 @@
     <Compile Include="DocumentContracts\DocumentFault.cs" />
     <Compile Include="DocumentContracts\DocumentQueryRequest.cs" />
     <Compile Include="DocumentContracts\DocumentQueryResult.cs" />
+    <Compile Include="DocumentUploadContracts\DocumentUploadFault.cs" />
+    <Compile Include="DocumentUploadContracts\DocumentUploadRequest.cs" />
+    <Compile Include="DocumentUploadContracts\DocumentUploadResult.cs" />
     <Compile Include="InstitutionContracts\InstitutionDto.cs" />
     <Compile Include="InstitutionContracts\InstitutionFault.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

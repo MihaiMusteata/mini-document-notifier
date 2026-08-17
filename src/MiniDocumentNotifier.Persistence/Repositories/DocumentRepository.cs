@@ -110,5 +110,28 @@ namespace MiniDocumentNotifier.Persistence.Repositories
                 TotalItems = totalCount
             };
         }
+
+        public int Insert(DocumentEntity document)
+        {
+            using (var connection = new SqlConnection(ConnectionString))
+            using (var command = new SqlCommand("Document_Insert", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(SetParameter("@InstitutionId", document.InstitutionId, SqlDbType.Int));
+                command.Parameters.Add(SetParameter("@Name", document.Name, SqlDbType.VarChar));
+                command.Parameters.Add(SetParameter("@Type", (int)document.Type, SqlDbType.Int));
+                command.Parameters.Add(SetParameter("@UploadDate", document.UploadDate, SqlDbType.DateTime2));
+                command.Parameters.Add(SetParameter("@Status", (int)document.Status, SqlDbType.Int));
+
+                var documentIdParam = SetOutputParameter("@DocumentId", SqlDbType.Int);
+                command.Parameters.Add(documentIdParam);
+
+                connection.Open();
+                command.ExecuteNonQuery();
+
+                return (int)documentIdParam.Value;
+            }
+        }
     }
 }

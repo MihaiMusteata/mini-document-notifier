@@ -63,11 +63,16 @@
   <ItemGroup>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="ViewModels\DocumentUploadViewModel.cs" />
     <Compile Include="ViewModels\Step2CredentialsViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\DocumentUploadView.xaml.cs">
+      <DependentUpon>DocumentUploadView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Step2CredentialsView.xaml.cs">
       <DependentUpon>Step2CredentialsView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\DocumentUploadView.xaml" />
     <Page Include="Views\Step2CredentialsView.xaml" />
   </ItemGroup>
 
@@ -97,6 +102,13 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
+      <Project>{d85c8837-8be6-4630-8b25-738de5d418ad}</Project>
+      <Name>MiniDocumentNotifier.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -279,7 +279,13 @@ namespace MiniDocumentNotifier.WinForms.Forms
 
         private void uploadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            using (var uploadForm = new DocumentUploadForm(_institutionId))
+            {
+                if (uploadForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    _ = LoadPageAsync();
+                }
+            }
         }
     }
 }
