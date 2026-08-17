@@ -18,8 +18,7 @@ namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
         {
             var container = new UnityContainer();
             
-            var preferencesPath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["UserPreferencesPath"]);
-            container.RegisterInstance<IUserPreferencesStore>(new JsonUserPreferencesStore(preferencesPath), new SingletonLifetimeManager());
+            container.RegisterInstance(CreateUserPreferencesStore(), new SingletonLifetimeManager());
 
             var viewConfigPath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["ViewConfigPath"]);
             var stalenessHours = int.Parse(ConfigurationManager.AppSettings["ViewConfigStalenessThresholdHours"]);
@@ -34,6 +33,20 @@ namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
 
             return container;
 
+        }
+
+        private static IUserPreferencesStore CreateUserPreferencesStore()
+        {
+            var source = ConfigurationManager.AppSettings["UserPreferencesSource"];
+
+            if (string.Equals(source, "Registry",StringComparison.CurrentCultureIgnoreCase))
+            {
+                var registryKey = ConfigurationManager.AppSettings["UserPreferencesRegistryKey"];
+                return new RegistryUserPreferencesStore(registryKey);
+            }
+            
+            var jsonPath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["UserPreferencesPath"]);
+            return new  JsonUserPreferencesStore(jsonPath);
         }
     }
 }
