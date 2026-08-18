@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Authentication;
 using System.ServiceModel;
 using MiniDocumentNotifier.Application.Auth;
@@ -10,6 +11,7 @@ using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Contracts.DocumentUploadContracts;
 using MiniDocumentNotifier.Contracts.InstitutionContracts;
 using MiniDocumentNotifier.Contracts.ServiceContracts;
+using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Models;
 
 namespace MiniDocumentNotifier.WcfHost
@@ -20,15 +22,17 @@ namespace MiniDocumentNotifier.WcfHost
         private readonly IInstitutionQueryService _institutionQueryService;
         private readonly IDocumentQueryService _documentQueryService;
         private readonly IDocumentUploadService _documentUploadService;
+        private readonly ILogger _logger;
 
         public DocumentNotifierService(IAuthenticationService authenticationService,
             IInstitutionQueryService institutionQueryService, IDocumentQueryService documentQueryService,
-            IDocumentUploadService documentUploadService)
+            IDocumentUploadService documentUploadService, ILogger logger)
         {
             _authenticationService = authenticationService;
             _institutionQueryService = institutionQueryService;
             _documentQueryService = documentQueryService;
             _documentUploadService = documentUploadService;
+            _logger = logger;
         }
 
         public LoginResult Login(LoginRequest request)
@@ -46,7 +50,12 @@ namespace MiniDocumentNotifier.WcfHost
             }
             catch (AuthenticationException ex)
             {
-                throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message }, new FaultReason("Failed."));
+                throw new FaultException<AuthFault>(new AuthFault { Message = ex.Message }, new FaultReason("Login rejected."));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Unexpected error during login for user '{request.Username}'.", ex);
+                throw new FaultException<AuthFault>(new AuthFault { Message = "Login failed due to a server error." }, new FaultReason("Login error."));
             }
         }
 
@@ -57,10 +66,11 @@ namespace MiniDocumentNotifier.WcfHost
                 var institutions = _institutionQueryService.GetAll();
                 return institutions;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error("Failed to load institutions.", ex);
                 throw new FaultException<InstitutionFault>(
-                    new InstitutionFault { Message = "Error getting institutions" }, new FaultReason("Failed."));
+                    new InstitutionFault { Message = "Institutions could not be loaded." }, new FaultReason("Institution query failed."));
             }
         }
 
@@ -71,10 +81,11 @@ namespace MiniDocumentNotifier.WcfHost
                 var documents = _documentQueryService.GetByInstitution(institutionId);
                 return documents;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error($"Failed to load documents for institution {institutionId}.", ex);
                 throw new FaultException<DocumentFault>(
-                    new DocumentFault { Message = "Error getting documents" }, new FaultReason("Failed."));
+                    new DocumentFault { Message = "Documents could not be loaded." }, new FaultReason("Document query failed."));
             }
         }
 
@@ -92,9 +103,14 @@ namespace MiniDocumentNotifier.WcfHost
                 AllowedTypes = request.AllowedTypes
             };
 
+            var stopwatch = Stopwatch.StartNew();
+
             try
             {
                 var result = _documentQueryService.GetPaged(query);
+                stopwatch.Stop();
+
+                _logger.Info($"Document query succeeded for institution {request.InstitutionId}: {result.Items.Count} of {result.TotalItems} document(s) returned in {stopwatch.ElapsedMilliseconds}ms.");
 
                 return new DocumentQueryResult
                 {
@@ -102,10 +118,11 @@ namespace MiniDocumentNotifier.WcfHost
                     Documents = result.Items
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.Error($"Document query failed for institution {request.InstitutionId}.", ex);
                 throw new FaultException<DocumentFault>(
-                    new DocumentFault { Message = "Error getting documents" }, new FaultReason("Failed."));
+                    new DocumentFault { Message = "Document search failed. Try adjusting the filters." }, new FaultReason("Document query failed."));
             }
         }
 
@@ -114,6 +131,9 @@ namespace MiniDocumentNotifier.WcfHost
             try
             {
                 var documentId = _documentUploadService.Upload(request);
+
+                _logger.Info($"Document uploaded: '{request.FileName}' ({request.Content?.Length ?? 0} bytes) for institution {request.InstitutionId}, new document id {documentId}.");
+
                 return new DocumentUploadResult
                 {
                     DocumentId = documentId,
@@ -121,7 +141,9 @@ namespace MiniDocumentNotifier.WcfHost
             }
             catch (Exception ex)
             {
-                throw new FaultException<DocumentUploadFault>(new DocumentUploadFault { Message = ex.Message });
+                _logger.Error($"Document upload failed: '{request.FileName}' for institution {request.InstitutionId}.", ex);
+                throw new FaultException<DocumentUploadFault>(
+                    new DocumentUploadFault { Message = "Document upload failed." }, new FaultReason("Upload error."));
             }
         }
     }

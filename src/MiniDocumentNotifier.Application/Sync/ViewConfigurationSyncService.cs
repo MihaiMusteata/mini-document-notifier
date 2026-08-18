@@ -1,4 +1,5 @@
 using System.IO;
+using MiniDocumentNotifier.Domain.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -8,11 +9,14 @@ namespace MiniDocumentNotifier.Application.Sync
     {
         private readonly IViewConfigurationSyncServiceClient _client;
         private readonly string _outputFilePath;
+        private readonly ILogger _logger;
 
-        public ViewConfigurationSyncService(IViewConfigurationSyncServiceClient client, string outputFilePath)
+        public ViewConfigurationSyncService(IViewConfigurationSyncServiceClient client, string outputFilePath,
+            ILogger logger)
         {
             _client = client;
             _outputFilePath = outputFilePath;
+            _logger = logger;
         }
 
         public void SyncAll()
@@ -33,6 +37,8 @@ namespace MiniDocumentNotifier.Application.Sync
             }
 
             File.WriteAllText(_outputFilePath, root.ToString(Formatting.Indented));
+
+            _logger.Info($"View configuration sync cycle completed: {viewConfigurations.Count} institution(s) synced, written to '{_outputFilePath}'.");
         }
     }
 }

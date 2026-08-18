@@ -12,27 +12,51 @@ namespace MiniDocumentNotifier.Infrastructure.ViewConfiguration
     {
         private readonly TimeSpan _stalenessThreshold;
         private readonly string _path;
+        private readonly ILogger _logger;
 
-        public JsonViewConfigurationStore(TimeSpan stalenessThreshold, string path)
+        public JsonViewConfigurationStore(TimeSpan stalenessThreshold, string path, ILogger logger)
         {
             _stalenessThreshold = stalenessThreshold;
             _path = path;
+            _logger = logger;
         }
 
         public ViewConfigurationResult Load()
         {
             if (!File.Exists(_path))
+            {
+                _logger.Warning($"View configuration file not found at '{_path}'.");
                 return new ViewConfigurationResult
                 {
                     FileExists = false,
                     IsStale = false,
                     Institutions = new List<InstitutionViewConfiguration>()
                 };
+            }
 
             var lastWrite = File.GetLastWriteTimeUtc(_path);
             var isStale = DateTime.UtcNow - lastWrite > _stalenessThreshold;
 
-            var root = JArray.Parse(File.ReadAllText(_path));
+            if (isStale)
+            {
+                _logger.Warning($"View configuration file '{_path}' is stale: last written {lastWrite:O} UTC, staleness threshold {_stalenessThreshold}.");
+            }
+
+            JArray root;
+            try
+            {
+                root = JArray.Parse(File.ReadAllText(_path));
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Failed to parse view configuration file '{_path}'.", ex);
+                return new ViewConfigurationResult
+                {
+                    FileExists = true,
+                    IsStale = isStale,
+                    Institutions = new List<InstitutionViewConfiguration>()
+                };
+            }
 
             var institutions = root.Select(node => new InstitutionViewConfiguration
             {

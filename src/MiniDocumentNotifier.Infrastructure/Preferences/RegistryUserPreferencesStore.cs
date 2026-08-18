@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Win32;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Models;
@@ -8,33 +9,55 @@ namespace MiniDocumentNotifier.Infrastructure.Preferences
     public class RegistryUserPreferencesStore : IUserPreferencesStore
     {
         private readonly string _registryKeyPath;
+        private readonly ILogger _logger;
 
-        public RegistryUserPreferencesStore(string registryKeyPath)
+        public RegistryUserPreferencesStore(string registryKeyPath, ILogger logger)
         {
             _registryKeyPath = registryKeyPath;
+            _logger = logger;
         }
 
         public UserPreferences Load()
         {
-            using (var key = Registry.CurrentUser.OpenSubKey(_registryKeyPath))
+            try
             {
-                var json = key?.GetValue("UserPreferences")?.ToString();
+                using (var key = Registry.CurrentUser.OpenSubKey(_registryKeyPath))
+                {
+                    var json = key?.GetValue("UserPreferences")?.ToString();
 
-                if (json != null && !string.IsNullOrEmpty(json))
-                    return JsonConvert.DeserializeObject<UserPreferences>(json) ?? UserPreferences.CreateDefault();
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        var preferences = JsonConvert.DeserializeObject<UserPreferences>(json) ?? UserPreferences.CreateDefault();
+                        _logger.Info($"User preferences loaded from registry key '{_registryKeyPath}' (source: Registry).");
+                        return preferences;
+                    }
 
-                var defaults = UserPreferences.CreateDefault();
-                Save(defaults);
-                return defaults;
+                    var defaults = UserPreferences.CreateDefault();
+                    _logger.Info($"User preferences registry value not found; created defaults at '{_registryKeyPath}' (source: Registry).");
+                    Save(defaults);
+                    return defaults;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Failed to read user preferences from registry key '{_registryKeyPath}' (source: Registry).", ex);
+                return UserPreferences.CreateDefault();
             }
         }
 
         public void Save(UserPreferences preferences)
         {
-            using (var key = Registry.CurrentUser.CreateSubKey(_registryKeyPath))
+            try
             {
-                var json = JsonConvert.SerializeObject(preferences);
-                key?.SetValue("UserPreferences", json, RegistryValueKind.String);
+                using (var key = Registry.CurrentUser.CreateSubKey(_registryKeyPath))
+                {
+                    var json = JsonConvert.SerializeObject(preferences);
+                    key?.SetValue("UserPreferences", json, RegistryValueKind.String);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Failed to write user preferences to registry key '{_registryKeyPath}' (source: Registry).", ex);
             }
         }
     }

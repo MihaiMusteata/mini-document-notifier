@@ -5,10 +5,12 @@ using MiniDocumentNotifier.Application.Institution;
 using MiniDocumentNotifier.Application.ViewConfiguration;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Repositories;
+using MiniDocumentNotifier.Infrastructure.Logging;
 using MiniDocumentNotifier.Infrastructure.Security;
 using MiniDocumentNotifier.Persistence.Repositories;
 using Unity;
 using Unity.Injection;
+using Unity.Lifetime;
 
 namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
 {
@@ -34,6 +36,8 @@ namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
                 new InjectionConstructor(
                     new ResolvedParameter<IDocumentRepository>(),
                     ConfigurationManager.AppSettings["DocumentStorageRootPath"]));
+
+            container.RegisterType<ILogger, NLogLogger>(new ContainerControlledLifetimeManager());
 
             return container;
         }

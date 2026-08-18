@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.WinForms.Wizard;
 using MiniDocumentNotifier.WinForms.Wizard.Steps;
 
@@ -14,11 +15,11 @@ namespace MiniDocumentNotifier.WinForms.Forms
 
         public event Action LoginSucceeded;
 
-        public LoginWizardForm(LoginWizardState loginWizardState)
+        public LoginWizardForm(LoginWizardState loginWizardState, ILogger logger)
         {
             InitializeComponent();
 
-            var step3 = new Step3ConfirmationControl(loginWizardState);
+            var step3 = new Step3ConfirmationControl(loginWizardState, logger);
             step3.LoginSucceeded += () =>
             {
                 LoginSucceeded?.Invoke();

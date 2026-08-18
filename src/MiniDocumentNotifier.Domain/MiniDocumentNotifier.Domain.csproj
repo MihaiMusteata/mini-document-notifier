@@ -47,6 +47,7 @@
     <Reference Include="System.Xml"/>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\ILogger.cs" />
     <Compile Include="Abstractions\IPasswordHasher.cs" />
     <Compile Include="Abstractions\IUserPreferencesStore.cs" />
     <Compile Include="Abstractions\IViewConfigurationStore.cs" />

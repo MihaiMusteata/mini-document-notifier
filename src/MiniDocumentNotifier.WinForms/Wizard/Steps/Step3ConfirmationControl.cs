@@ -1,8 +1,10 @@
 using System;
+using System.Configuration;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniDocumentNotifier.Contracts.AuthContracts;
+using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.WinForms.Services;
 
 namespace MiniDocumentNotifier.WinForms.Wizard.Steps
@@ -10,13 +12,15 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
     public partial class Step3ConfirmationControl : UserControl, ILoginWizardStep
     {
         private readonly LoginWizardState _loginWizardState;
+        private readonly ILogger _logger;
 
         public event Action LoginSucceeded;
 
-        public Step3ConfirmationControl(LoginWizardState loginWizardState)
+        public Step3ConfirmationControl(LoginWizardState loginWizardState, ILogger logger)
         {
             InitializeComponent();
             _loginWizardState = loginWizardState;
+            _logger = logger;
         }
 
         protected override void OnVisibleChanged(EventArgs e)
@@ -60,8 +64,10 @@ namespace MiniDocumentNotifier.WinForms.Wizard.Steps
             {
                 MessageBox.Show(this, fault.Detail.Message, "Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (CommunicationException)
+            catch (CommunicationException ex)
             {
+                var endpoint = ConfigurationManager.AppSettings["DocumentNotifierServiceUrl"];
+                _logger.Error($"WCF Host unreachable during login attempt at endpoint '{endpoint}'.", ex);
                 MessageBox.Show(this, "Communication error with service", "Eroare", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }

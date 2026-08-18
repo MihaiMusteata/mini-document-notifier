@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
@@ -17,6 +18,8 @@ namespace MiniDocumentNotifier.WinForms.Forms
     {
         private readonly DocumentUploadViewModel _viewModel;
         private readonly int _institutionId;
+
+        private const int MaxUploadSize = 5 * 1024 * 1024;
 
         public DocumentUploadForm(int institutionId)
         {
@@ -54,8 +57,14 @@ namespace MiniDocumentNotifier.WinForms.Forms
         {
             _viewModel.IsUploading = true;
             _viewModel.StatusMessage = "Uploading...";
+
             try
             {
+                var fileInfo = new FileInfo(_viewModel.FilePath);
+
+                if (fileInfo.Length > MaxUploadSize)
+                    throw (new Exception("The file is too large. Maximum size is 5MB"));
+
                 var fileBytes = File.ReadAllBytes(_viewModel.FilePath);
 
                 var request = new DocumentUploadRequest

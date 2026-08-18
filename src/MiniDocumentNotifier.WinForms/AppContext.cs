@@ -13,6 +13,7 @@ namespace MiniDocumentNotifier.WinForms
         private readonly IUserPreferencesStore _userPreferencesStore;
         private readonly IBackgroundAppSignal _backgroundAppSignal;
         private readonly IViewConfigurationStore _viewConfigurationStore;
+        private readonly ILogger _logger;
         private readonly LoginWizardState _loginWizardState = new LoginWizardState();
 
         private bool _isBackgroundAppRunning;
@@ -22,11 +23,13 @@ namespace MiniDocumentNotifier.WinForms
         public AppContext(
             IUserPreferencesStore userPreferencesStore,
             IBackgroundAppSignal backgroundAppSignal,
-            IViewConfigurationStore viewConfigurationStore)
+            IViewConfigurationStore viewConfigurationStore,
+            ILogger logger)
         {
             _userPreferencesStore = userPreferencesStore;
             _backgroundAppSignal = backgroundAppSignal;
             _viewConfigurationStore = viewConfigurationStore;
+            _logger = logger;
 
             var splashScreen = new SplashScreenForm();
             splashScreen.InitializationSteps += () => RunStartupSequence(splashScreen);
@@ -41,12 +44,12 @@ namespace MiniDocumentNotifier.WinForms
             _loginWizardState.Username = _userPreferences.LastUsername;
 
             splashScreen.SetStatus("Checking Background App...");
-            _isBackgroundAppRunning = await Task.Run(() => CheckBackgroundAppRunning(_backgroundAppSignal));
+            _isBackgroundAppRunning = await Task.Run(() => CheckBackgroundAppRunning(_backgroundAppSignal, _logger));
         }
 
         private void SplashScreenForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            var loginWizardForm = new LoginWizardForm(_loginWizardState);
+            var loginWizardForm = new LoginWizardForm(_loginWizardState, _logger);
 
             loginWizardForm.LoginSucceeded += () => _loginSucceeded = true;
             loginWizardForm.FormClosed += LoginWizardForm_FormClosed;
@@ -70,11 +73,18 @@ namespace MiniDocumentNotifier.WinForms
             mainForm.Show();
         }
 
-        private static bool CheckBackgroundAppRunning(IBackgroundAppSignal signal)
+        private static bool CheckBackgroundAppRunning(IBackgroundAppSignal signal, ILogger logger)
         {
             using (signal)
             {
-                return signal.IsActive();
+                var isActive = signal.IsActive();
+
+                if (!isActive)
+                {
+                    logger.Warning("Background App is not running.");
+                }
+
+                return isActive;
             }
         }
     }
