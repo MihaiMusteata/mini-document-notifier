@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="MiniDocumentNotifier.WcfHost.ViewConfigurationService" CodeBehind="ViewConfigurationSyncService.svc.cs" Factory="MiniDocumentNotifier.WcfHost.UnityBootstrapper.UnityServiceHostFactory" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="MiniDocumentNotifier.WcfHost.ViewConfigurationService" CodeBehind="~/ViewConfigurationService.svc.cs" Factory="MiniDocumentNotifier.WcfHost.UnityBootstrapper.UnityServiceHostFactory" %>

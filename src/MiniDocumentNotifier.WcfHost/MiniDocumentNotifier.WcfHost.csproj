@@ -87,7 +87,7 @@
     <Compile Include="UnityBootstrapper\UnityInstanceProvider.cs" />
     <Compile Include="UnityBootstrapper\UnityServiceBehavior.cs" />
     <Compile Include="UnityBootstrapper\UnityServiceHostFactory.cs" />
-    <Compile Include="ViewConfigurationSyncService.svc.cs">
+    <Compile Include="ViewConfigurationService.svc.cs">
       <DependentUpon>ViewConfigurationService.svc</DependentUpon>
     </Compile>
   </ItemGroup>

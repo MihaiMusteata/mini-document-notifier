@@ -26,6 +26,8 @@ namespace MiniDocumentNotifier.BackgroundApp
 
         public void Run()
         {
+            var random = new Random();
+
             while (true)
             {
                 _logger.Info("View configuration sync cycle started.");
@@ -65,7 +67,8 @@ namespace MiniDocumentNotifier.BackgroundApp
                     _logger.Warning($"Applying backoff after {_consecutiveFailures} consecutive failure(s); waiting {delaySeconds}s before next sync attempt.");
                 }
 
-                Thread.Sleep(TimeSpan.FromSeconds(delaySeconds));
+                var jitter = random.NextDouble() * 0.2 - 0.1;
+                Thread.Sleep(TimeSpan.FromSeconds(delaySeconds * (1 + jitter)));
             }
         }
     }
