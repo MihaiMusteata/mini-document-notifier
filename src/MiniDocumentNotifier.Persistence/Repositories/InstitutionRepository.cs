@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Entities;
 using MiniDocumentNotifier.Domain.Repositories;
 
@@ -8,8 +9,16 @@ namespace MiniDocumentNotifier.Persistence.Repositories
 {
     public class InstitutionRepository : BaseRepository, IInstitutionRepository
     {
+        private readonly ILogger _logger;
+
+        public InstitutionRepository(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public List<InstitutionEntity> GetAll()
         {
+            _logger.Info("Getting all institutions");
             var institutions = new List<InstitutionEntity>();
 
             using (var connection = new SqlConnection(ConnectionString))

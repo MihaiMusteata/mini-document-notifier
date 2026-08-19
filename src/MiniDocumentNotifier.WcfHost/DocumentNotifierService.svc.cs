@@ -33,6 +33,7 @@ namespace MiniDocumentNotifier.WcfHost
             _documentQueryService = documentQueryService;
             _documentUploadService = documentUploadService;
             _logger = logger;
+            logger.Info("Document Notifier Service started");
         }
 
         public LoginResult Login(LoginRequest request)
@@ -61,6 +62,7 @@ namespace MiniDocumentNotifier.WcfHost
 
         public List<InstitutionDto> GetInstitutions()
         {
+                _logger.Info("Get institutions started.");
             try
             {
                 var institutions = _institutionQueryService.GetAll();

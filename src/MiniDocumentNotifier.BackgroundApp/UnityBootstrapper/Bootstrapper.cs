@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Application.Sync;
 using MiniDocumentNotifier.BackgroundApp.Client;
 using MiniDocumentNotifier.Domain.Abstractions;
@@ -26,7 +27,10 @@ namespace MiniDocumentNotifier.BackgroundApp.UnityBootstrapper
                 Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["OutputFilePath"]);
             container.RegisterType<IViewConfigurationSyncService, ViewConfigurationSyncService>(
                 new ContainerControlledLifetimeManager(),
-                new InjectionConstructor(typeof(IViewConfigurationSyncServiceClient), outputFilePath, typeof(ILogger)));
+                new InjectionConstructor(
+                    typeof(IViewConfigurationSyncServiceClient),
+                    typeof(IFileStorage)
+                    , outputFilePath, typeof(ILogger)));
 
             container.RegisterType<ISingleInstanceGuard, MutexSingleInstanceGuard>(new TransientLifetimeManager(),
                 new InjectionConstructor(Constants.BackgroundAppMutexName));
@@ -39,6 +43,7 @@ namespace MiniDocumentNotifier.BackgroundApp.UnityBootstrapper
                 new InjectionConstructor(typeof(IViewConfigurationSyncService), intervalSeconds, maxBackoffSeconds,
                     typeof(ILogger)));
 
+            container.RegisterType<IFileStorage, FileStorage>();
             container.RegisterType<ILogger, NLogLogger>(new ContainerControlledLifetimeManager());
 
             return container;

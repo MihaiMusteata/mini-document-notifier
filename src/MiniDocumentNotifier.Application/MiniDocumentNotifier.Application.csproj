@@ -64,8 +64,10 @@
         <Compile Include="Auth\IAuthenticationService.cs" />
         <Compile Include="Document\DocumentQueryService.cs" />
         <Compile Include="Document\DocumentUploadService.cs" />
+        <Compile Include="Document\FileStorage.cs" />
         <Compile Include="Document\IDocumentQueryService.cs" />
         <Compile Include="Document\IDocumentUploadService.cs" />
+        <Compile Include="Document\IFileStorage.cs" />
         <Compile Include="Institution\IInstitutionQueryService.cs" />
         <Compile Include="Institution\InstitutionQueryService.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

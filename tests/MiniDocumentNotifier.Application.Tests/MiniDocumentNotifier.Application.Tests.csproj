@@ -66,7 +66,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auth\AuthenticationServiceTest.cs" />
+    <Compile Include="Document\DocumentQueryServiceTest.cs" />
+    <Compile Include="Document\DocumentUploadServiceTest.cs" />
+    <Compile Include="Document\FileStorageTest.cs" />
+    <Compile Include="Institution\InstitutionQueryServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sync\ViewConfigurationSyncServiceTest.cs" />
+    <Compile Include="ViewConfiguration\ViewConfigurationQueryServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\MiniDocumentNotifier.Application\MiniDocumentNotifier.Application.csproj">

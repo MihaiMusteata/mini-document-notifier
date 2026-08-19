@@ -28,13 +28,17 @@ namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
             container.RegisterType<IViewConfigurationRepository, ViewConfigurationRepository>();
 
             container.RegisterType<IPasswordHasher, Pbkdf2PasswordHasher>();
+            container.RegisterType<IFileStorage, FileStorage>();
+
             container.RegisterType<IAuthenticationService, AuthenticationService>();
             container.RegisterType<IInstitutionQueryService, InstitutionQueryService>();
             container.RegisterType<IDocumentQueryService, DocumentQueryService>();
             container.RegisterType<IViewConfigurationQueryService, ViewConfigurationQueryService>();
+           
             container.RegisterType<IDocumentUploadService, DocumentUploadService>(
                 new InjectionConstructor(
                     new ResolvedParameter<IDocumentRepository>(),
+                    new ResolvedParameter<IFileStorage>(),
                     ConfigurationManager.AppSettings["DocumentStorageRootPath"]));
 
             container.RegisterType<ILogger, NLogLogger>(new ContainerControlledLifetimeManager());
