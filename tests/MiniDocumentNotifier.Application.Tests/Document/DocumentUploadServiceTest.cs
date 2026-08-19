@@ -74,7 +74,7 @@ namespace MiniDocumentNotifier.Application.Tests.Document
                 .With(x => x.Content, (byte[])null)
                 .Create();
 
-            Assert.ThrowsException<ArgumentException>(() => _documentUploadService.Upload(request));
+            Assert.ThrowsExactly<ArgumentException>(() => _documentUploadService.Upload(request));
         }
     }
 }

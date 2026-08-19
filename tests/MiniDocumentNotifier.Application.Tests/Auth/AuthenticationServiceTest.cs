@@ -71,7 +71,7 @@ namespace MiniDocumentNotifier.Application.Tests.Auth
                 .Setup(x => x.GetByUsernameAndInstitutionId(request.Username, request.InstitutionId))
                 .Returns((UserEntity)null);
 
-            Assert.ThrowsException<AuthenticationException>(() => _service.Authenticate(request));
+            Assert.ThrowsExactly<AuthenticationException>(() => _service.Authenticate(request));
 
             _passwordHasher.Verify(
                 x => x.Verify(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
@@ -96,7 +96,7 @@ namespace MiniDocumentNotifier.Application.Tests.Auth
                 .Returns(false);
 
 
-            Assert.ThrowsException<AuthenticationException>(() => _service.Authenticate(request));
+            Assert.ThrowsExactly<AuthenticationException>(() => _service.Authenticate(request));
         }
 
         [TestMethod]
@@ -116,7 +116,7 @@ namespace MiniDocumentNotifier.Application.Tests.Auth
                 .Setup(x => x.Verify(request.Password, user.PasswordHash, user.PasswordSalt))
                 .Returns(true);
 
-            Assert.ThrowsException<AuthenticationException>(() => _service.Authenticate(request));
+            Assert.ThrowsExactly<AuthenticationException>(() => _service.Authenticate(request));
         }
     }
 }

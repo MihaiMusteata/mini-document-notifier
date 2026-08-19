@@ -8,11 +8,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{540357DB-5CBF-4FAF-8F90-208A08D8220B}</ProjectGuid>
+    <ProjectGuid>{B68D7EF7-B112-4AA6-B302-244A64621137}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MiniDocumentNotifier.Application.Tests</RootNamespace>
-    <AssemblyName>MiniDocumentNotifier.Application.Tests</AssemblyName>
+    <RootNamespace>MiniDocumentNotifier.Domain.Tests</RootNamespace>
+    <AssemblyName>MiniDocumentNotifier.Domain.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -42,12 +42,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoFixture, Version=4.18.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.4.18.1\lib\net452\AutoFixture.dll</HintPath>
-    </Reference>
-    <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.23.0.29, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.ApplicationInsights.2.23.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -81,12 +75,6 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MSTest.TestFramework.3.11.1\lib\net462\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq, Version=4.20.72.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.20.72\lib\net462\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.5.1.1\lib\net462\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -124,27 +112,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auth\AuthenticationServiceTest.cs" />
-    <Compile Include="Document\DocumentQueryServiceTest.cs" />
-    <Compile Include="Document\DocumentUploadServiceTest.cs" />
-    <Compile Include="Document\FileStorageTest.cs" />
-    <Compile Include="Institution\InstitutionQueryServiceTest.cs" />
+    <Compile Include="Models\UserPreferencesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sync\ViewConfigurationSyncServiceTest.cs" />
-    <Compile Include="ViewConfiguration\ViewConfigurationQueryServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MiniDocumentNotifier.Application\MiniDocumentNotifier.Application.csproj">
-      <Project>{791C5964-767D-42EC-9378-0F58D7E4A18F}</Project>
-      <Name>MiniDocumentNotifier.Application</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
       <Project>{D85C8837-8BE6-4630-8B25-738DE5D418AD}</Project>
       <Name>MiniDocumentNotifier.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\MiniDocumentNotifier.Contracts\MiniDocumentNotifier.Contracts.csproj">
-      <Project>{28FA09CC-5D56-4CF8-8415-0E49CEBF0798}</Project>
-      <Name>MiniDocumentNotifier.Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -166,12 +140,12 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.Testing.Platform.MSBuild.2.3.3\build\Microsoft.Testing.Platform.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Testing.Platform.MSBuild.2.3.3\build\Microsoft.Testing.Platform.MSBuild.props'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.Testing.Platform.MSBuild.2.3.3\build\Microsoft.Testing.Platform.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Testing.Platform.MSBuild.2.3.3\build\Microsoft.Testing.Platform.MSBuild.targets'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.Testing.Extensions.Telemetry.2.3.3\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Testing.Extensions.Telemetry.2.3.3\build\netstandard2.0\Microsoft.Testing.Extensions.Telemetry.props'))" />
+    <Error Condition="!Exists('..\..\packages\MSTest.TestFramework.3.11.1\build\net462\MSTest.TestFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSTest.TestFramework.3.11.1\build\net462\MSTest.TestFramework.targets'))" />
     <Error Condition="!Exists('..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.targets'))" />
-    <Error Condition="!Exists('..\..\packages\MSTest.TestFramework.3.11.1\build\net462\MSTest.TestFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSTest.TestFramework.3.11.1\build\net462\MSTest.TestFramework.targets'))" />
   </Target>
   <Import Project="..\..\packages\Microsoft.Testing.Platform.2.3.3\build\netstandard2.0\Microsoft.Testing.Platform.targets" Condition="Exists('..\..\packages\Microsoft.Testing.Platform.2.3.3\build\netstandard2.0\Microsoft.Testing.Platform.targets')" />
   <Import Project="..\..\packages\Microsoft.Testing.Platform.MSBuild.2.3.3\build\Microsoft.Testing.Platform.MSBuild.targets" Condition="Exists('..\..\packages\Microsoft.Testing.Platform.MSBuild.2.3.3\build\Microsoft.Testing.Platform.MSBuild.targets')" />
-  <Import Project="..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.targets" Condition="Exists('..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.targets')" />
   <Import Project="..\..\packages\MSTest.TestFramework.3.11.1\build\net462\MSTest.TestFramework.targets" Condition="Exists('..\..\packages\MSTest.TestFramework.3.11.1\build\net462\MSTest.TestFramework.targets')" />
+  <Import Project="..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.targets" Condition="Exists('..\..\packages\MSTest.TestAdapter.3.11.1\build\net462\MSTest.TestAdapter.targets')" />
 </Project>
