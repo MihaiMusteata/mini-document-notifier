@@ -90,5 +90,8 @@
       <Name>MiniDocumentNotifier.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="MiniDocumentNotifier.BackgroundApp.Tests" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

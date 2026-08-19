@@ -20,6 +20,11 @@ namespace MiniDocumentNotifier.BackgroundApp.Client
                 new ChannelFactory<IViewConfigurationService>(binding, endpoint));
         }
 
+        internal ViewConfigurationSyncServiceClient(Lazy<ChannelFactory<IViewConfigurationService>> channelFactory)
+        {
+            _channelFactory = channelFactory;
+        }
+
         public List<ViewConfigurationDto> GetAllViewConfigurations()
         {
             var channel = _channelFactory.Value.CreateChannel();
