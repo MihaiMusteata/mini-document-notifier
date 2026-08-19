@@ -10,7 +10,16 @@ using MiniDocumentNotifier.Contracts.ServiceContracts;
 
 namespace MiniDocumentNotifier.WinForms.Services
 {
-    public class DocumentNotifierServiceClient : IDisposable
+    public interface IDocumentNotifierServiceClient : IDisposable
+    {
+        LoginResult Login(LoginRequest request);
+        List<InstitutionDto> GetInstitutions();
+        List<DocumentDto> GetDocuments(int institutionId);
+        DocumentQueryResult GetDocumentsPaged(DocumentQueryRequest request);
+        DocumentUploadResult UploadDocument(DocumentUploadRequest request);
+    }
+
+    public class DocumentNotifierServiceClient : IDocumentNotifierServiceClient
     {
         private readonly ChannelFactory<IDocumentNotifierService> _channelFactory;
 

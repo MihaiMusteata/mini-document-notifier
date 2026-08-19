@@ -1,6 +1,6 @@
 using System;
 
-namespace MiniDocumentNotifier.WinForms
+namespace MiniDocumentNotifier.WinForms.Models
 {
     public class DocumentRow
     {

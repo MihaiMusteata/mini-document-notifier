@@ -1,291 +1,175 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Domain.Abstractions;
-using MiniDocumentNotifier.Domain.Enums;
-using MiniDocumentNotifier.Domain.Models;
+using MiniDocumentNotifier.WinForms.Models;
+using MiniDocumentNotifier.WinForms.Presenters;
 using MiniDocumentNotifier.WinForms.Services;
+using MiniDocumentNotifier.WinForms.Views;
 
 namespace MiniDocumentNotifier.WinForms.Forms
 {
-    public class DocumentGridState
+    public partial class MainForm : Form, IMainView
     {
-        public int CurrentPage { get; set; }
-        public int TotalCount { get; set; }
-        public DocumentType? TypeFilter { get; set; }
-        public DocumentStatus? StatusFilter { get; set; }
-    }
-
-    public partial class MainForm : Form
-    {
-        private const int PageSize = 20;
-        private const int SearchDebounceMilliseconds = 500;
-
-        private readonly bool _isBackgroundAppRunning;
-        private readonly int _institutionId;
-        private readonly IViewConfigurationStore _viewConfigurationStore;
-        private readonly UserPreferences _preferences;
-        private readonly DocumentGridState _gridState = new DocumentGridState();
-
-        private InstitutionViewConfiguration _institutionConfiguration;
-        private List<DocumentRow> _rows = new List<DocumentRow>();
+        private readonly MainPresenter _presenter;
         private bool _suppressWidthCapture;
 
+        public MainForm(
+            IUserPreferencesStore preferencesStore,
+            IViewConfigurationStore viewConfigurationStore,
+            bool isBackgroundAppRunning,
+            int institutionId) :
+            this(
+                preferencesStore,
+                viewConfigurationStore,
+                new DocumentNotifierServiceClient(),
+                isBackgroundAppRunning,
+                institutionId)
+        {
+        }
+
         public MainForm(IUserPreferencesStore preferencesStore, IViewConfigurationStore viewConfigurationStore,
-            bool isBackgroundAppRunning, int institutionId)
+            IDocumentNotifierServiceClient serviceClient, bool isBackgroundAppRunning, int institutionId)
         {
             InitializeComponent();
-            _isBackgroundAppRunning = isBackgroundAppRunning;
-            _institutionId = institutionId;
-            _viewConfigurationStore = viewConfigurationStore;
-            _preferences = preferencesStore.Load();
 
-            searchDebounceTimer.Interval = SearchDebounceMilliseconds;
+            _presenter = new MainPresenter(this, preferencesStore, viewConfigurationStore,
+                serviceClient, isBackgroundAppRunning, institutionId);
 
-            CheckConfiguration();
-            PopulateFilterOptions();
+            searchDebounceTimer.Interval = 500;
 
-            Load += async (s, e) => await LoadPageAsync();
+            Load += async (s, e) => await _presenter.InitializeAsync();
             FormClosing += (s, e) =>
             {
-                preferencesStore.Save(_preferences);
+                _presenter.OnClosing();
+                serviceClient.Dispose();
                 searchDebounceTimer.Dispose();
             };
         }
 
-        private void CheckConfiguration()
+
+        #region IMainView Implementation
+
+        public string SearchText => txtSearch.Text;
+        public string SelectedTypeFilterLabel => cmbTypeFilter.SelectedItem?.ToString();
+        public string SelectedStatusFilterLabel => cmbStatusFilter.SelectedItem?.ToString();
+
+        public List<DocumentRow> Rows
         {
-            var result = _viewConfigurationStore.Load();
-
-            if (!result.FileExists || result.IsStale || !_isBackgroundAppRunning)
+            set
             {
-                var message = !result.FileExists ? "Configuration file not found." :
-                    result.IsStale ? "Configuration file is stale." : "";
-
-                if (!_isBackgroundAppRunning)
-                    message += " Background App is not running.";
-
-                ShowWarning(message);
-                return;
-            }
-
-            _institutionConfiguration = result.Institutions?.FirstOrDefault(i => i.InstitutionId == _institutionId);
-
-            if (_institutionConfiguration == null)
-            {
-                ShowWarning("No view configuration found for this institution. Showing all documents.");
+                documentsDataGrid.DataSource = null;
+                documentsDataGrid.DataSource = value;
             }
         }
 
-        private void ShowWarning(string message)
+        public void SetTypeFilterOptions(List<string> options) => cmbTypeFilter.DataSource = options.ToList();
+
+        public void SetStatusFilterOptions(List<string> options) => cmbStatusFilter.DataSource = options.ToList();
+
+        public void SetPagingInfo(string pageText, bool prevEnabled, bool nextEnabled)
+        {
+            lblPageInfo.Text = pageText;
+            btnPrevPage.Enabled = prevEnabled;
+            btnNextPage.Enabled = nextEnabled;
+        }
+
+        public void DisplayDocuments(List<DocumentRow> rows, IReadOnlyDictionary<string, float> columnWidths)
+        {
+            _suppressWidthCapture = true;
+
+            documentsDataGrid.DataSource = null;
+            documentsDataGrid.DataSource = rows;
+
+            foreach (DataGridViewColumn column in documentsDataGrid.Columns)
+            {
+                if (columnWidths.TryGetValue(column.Name, out var weight))
+                    column.FillWeight = weight;
+            }
+
+            _suppressWidthCapture = false;
+        }
+
+        public void ApplyColumnWidth(string columnName, float weight)
+        {
+            if (!documentsDataGrid.Columns.Contains(columnName)) return;
+
+            _suppressWidthCapture = true;
+            documentsDataGrid.Columns[columnName].FillWeight = weight;
+            _suppressWidthCapture = false;
+        }
+
+        public void ShowWarning(string message)
         {
             lblWarning.Text = message;
             warningPanel.Visible = true;
         }
 
-        private void BindGrid()
+        public void HideWarning() => warningPanel.Visible = false;
+
+        public void ShowTimeoutError() => MessageBox.Show(this, @"Service timeout.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+        public void SetSortIndicator(string columnName, bool descending)
         {
-            documentsDataGrid.DataSource = null;
-            documentsDataGrid.DataSource = _rows;
-        }
+            if (!documentsDataGrid.Columns.Contains(columnName)) return;
 
-        private void ApplyColumnWidths()
-        {
-            foreach (DataGridViewColumn column in documentsDataGrid.Columns)
-            {
-                if (_preferences.ColumnWidths.TryGetValue(column.Name, out var weight))
-                    column.FillWeight = weight;
-            }
-        }
-
-        private async Task LoadPageAsync()
-        {
-            try
-            {
-                var request = new DocumentQueryRequest
-                {
-                    InstitutionId = _institutionId,
-                    PageNumber = _gridState.CurrentPage,
-                    PageSize = PageSize,
-                    AllowedTypes = GetAllowedTypes(),
-                    TypeFilter = _gridState.TypeFilter,
-                    StatusFilter = _gridState.StatusFilter,
-                    SortColumn = _preferences.DefaultSortColumn,
-                    SortDirection = _preferences.DefaultSortDirection
-                };
-
-                var result = await Task.Run(() =>
-                {
-                    using (var client = new DocumentNotifierServiceClient())
-                    {
-                        return client.GetDocumentsPaged(request);
-                    }
-                });
-
-                _gridState.TotalCount = result.Total;
-
-                var searchTerm = txtSearch.Text?.Trim();
-                var documents = result.Documents.AsEnumerable();
-
-                if (!string.IsNullOrEmpty(searchTerm))
-                    documents =
-                        documents.Where(d => d.Name.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0);
-
-                _rows = documents.Select(d => new DocumentRow
-                {
-                    Id = d.Id,
-                    Name = d.Name,
-                    Type = DocumentLabels.DocumentTypeLabels[d.Type],
-                    Status = DocumentLabels.DocumentStatusLabels[d.Status],
-                    UploadDate = d.UploadDate
-                }).ToList();
-
-                _suppressWidthCapture = true;
-                BindGrid();
-                ApplyColumnWidths();
-                _suppressWidthCapture = false;
-
-                UpdatePagingLabel();
-            }
-            catch (EndpointNotFoundException)
-            {
-                ShowWarning("Service is not available.");
-            }
-            catch (CommunicationException)
-            {
-                ShowWarning("Communication error with the service.");
-            }
-            catch (TimeoutException)
-            {
-                MessageBox.Show(this, @"Service timeout.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        #region Helpers
-
-        private List<DocumentType> GetAllowedTypes()
-        {
-            if (_institutionConfiguration == null) return null;
-
-            return Newtonsoft.Json.JsonConvert
-                .DeserializeObject<List<string>>(_institutionConfiguration.ActiveCategories)
-                .Select(t => (DocumentType)Enum.Parse(typeof(DocumentType), t))
-                .ToList();
-        }
-
-        private void UpdatePagingLabel()
-        {
-            var totalPages = (int)Math.Ceiling(_gridState.TotalCount / (double)PageSize);
-            lblPageInfo.Text = $@"Page {_gridState.CurrentPage + 1} of {Math.Max(totalPages, 1)}";
-            btnPrevPage.Enabled = _gridState.CurrentPage > 0;
-            btnNextPage.Enabled = (_gridState.CurrentPage + 1) * PageSize < _gridState.TotalCount;
-        }
-
-        private void PopulateFilterOptions()
-        {
-            var allowedTypes = GetAllowedTypes() ?? Enum.GetValues(typeof(DocumentType)).Cast<DocumentType>().ToList();
-
-            var typeOptions = new List<string> { "All" };
-            typeOptions.AddRange(allowedTypes.Select(t => DocumentLabels.DocumentTypeLabels[t]));
-            cmbTypeFilter.DataSource = typeOptions;
-
-            var statusOptions = new List<string> { "All" };
-            statusOptions.AddRange(Enum.GetValues(typeof(DocumentStatus)).Cast<DocumentStatus>()
-                .Select(s => DocumentLabels.DocumentStatusLabels[s]));
-            cmbStatusFilter.DataSource = statusOptions;
+            documentsDataGrid.Columns[columnName].HeaderCell.SortGlyphDirection =
+                descending ? SortOrder.Descending : SortOrder.Ascending;
         }
 
         #endregion
 
+        #region Event Handlers (delegated to presenter)
 
-        #region Events Binding
-
-        private void btnDismissWarning_Click(object sender, EventArgs e)
-        {
-            warningPanel.Visible = false;
-        }
+        private void btnDismissWarning_Click(object sender, System.EventArgs e) => _presenter.OnDismissWarning();
 
         private async void documentsDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             var columnName = documentsDataGrid.Columns[e.ColumnIndex].Name;
-            var descending = _preferences.DefaultSortColumn == columnName && !_preferences.DefaultSortDirection;
-
-            _preferences.DefaultSortColumn = columnName;
-            _preferences.DefaultSortDirection = descending;
-
-            await LoadPageAsync();
+            await _presenter.OnColumnHeaderClickedAsync(columnName);
         }
 
         private void documentsDataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
             if (_suppressWidthCapture) return;
-
-            _preferences.ColumnWidths[e.Column.Name] = e.Column.FillWeight;
+            _presenter.OnColumnWidthChanged(e.Column.Name, e.Column.FillWeight);
         }
 
-        private async void btnPrevPage_Click(object sender, EventArgs e)
-        {
-            if (_gridState.CurrentPage == 0) return;
-            _gridState.CurrentPage--;
-            await LoadPageAsync();
-        }
+        private async void btnPrevPage_Click(object sender, System.EventArgs e) =>
+            await _presenter.OnPrevPageAsync();
 
-        private async void btnNextPage_Click(object sender, EventArgs e)
-        {
-            _gridState.CurrentPage++;
-            await LoadPageAsync();
-        }
+        private async void btnNextPage_Click(object sender, System.EventArgs e) =>
+            await _presenter.OnNextPageAsync();
 
-        private async void cmbTypeFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selected = cmbTypeFilter.SelectedItem?.ToString();
-            _gridState.TypeFilter = selected == "All" || selected == null
-                ? (DocumentType?)null
-                : DocumentLabels.DocumentTypeLabels.FirstOrDefault(kv => kv.Value == selected).Key;
+        private async void cmbTypeFilter_SelectedIndexChanged(object sender, System.EventArgs e) =>
+            await _presenter.OnTypeFilterChangedAsync(SelectedTypeFilterLabel);
 
-            _gridState.CurrentPage = 0;
-            await LoadPageAsync();
-        }
+        private async void cmbStatusFilter_SelectedIndexChanged(object sender, System.EventArgs e) =>
+            await _presenter.OnStatusFilterChangedAsync(SelectedStatusFilterLabel);
 
-        private async void cmbStatusFilter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selected = cmbStatusFilter.SelectedItem?.ToString();
-            _gridState.StatusFilter = selected == "All" || selected == null
-                ? (DocumentStatus?)null
-                : DocumentLabels.DocumentStatusLabels.FirstOrDefault(kv => kv.Value == selected).Key;
-
-            _gridState.CurrentPage = 0;
-            await LoadPageAsync();
-        }
-
-        private void txtSearch_TextChanged(object sender, EventArgs e)
+        private void txtSearch_TextChanged(object sender, System.EventArgs e)
         {
             searchDebounceTimer.Stop();
             searchDebounceTimer.Start();
         }
 
-        #endregion
-
-        private async void searchDebounceTimer_Tick(object sender, EventArgs e)
+        private async void searchDebounceTimer_Tick(object sender, System.EventArgs e)
         {
             searchDebounceTimer.Stop();
-            _gridState.CurrentPage = 0;
-            await LoadPageAsync();
+            await _presenter.OnSearchDebounceElapsedAsync();
         }
 
-        private void uploadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void uploadToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            using (var uploadForm = new DocumentUploadForm(_institutionId))
+            using (var uploadForm = new DocumentUploadForm(_presenter.InstitutionId))
             {
                 if (uploadForm.ShowDialog(this) == DialogResult.OK)
                 {
-                    _ = LoadPageAsync();
+                    _ = _presenter.OnUploadCompletedAsync();
                 }
             }
         }
+
+        #endregion
     }
 }
