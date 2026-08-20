@@ -64,12 +64,17 @@
     <Compile Include="Preferences\RegistryUserPreferencesStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Pbkdf2PasswordHasher.cs" />
+    <Compile Include="ServiceClient\IDocumentNotifierServiceClient.cs" />
     <Compile Include="ViewConfiguration\JsonViewConfigurationStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MiniDocumentNotifier.Contracts\MiniDocumentNotifier.Contracts.csproj">
+      <Project>{28fa09cc-5d56-4cf8-8415-0e49cebf0798}</Project>
+      <Name>MiniDocumentNotifier.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
       <Project>{d85c8837-8be6-4630-8b25-738de5d418ad}</Project>
       <Name>MiniDocumentNotifier.Domain</Name>

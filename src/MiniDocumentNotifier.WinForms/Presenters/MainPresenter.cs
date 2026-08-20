@@ -7,6 +7,7 @@ using MiniDocumentNotifier.Contracts.DocumentContracts;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Enums;
 using MiniDocumentNotifier.Domain.Models;
+using MiniDocumentNotifier.Infrastructure.ServiceClient;
 using MiniDocumentNotifier.WinForms.Forms;
 using MiniDocumentNotifier.WinForms.Models;
 using MiniDocumentNotifier.WinForms.Services;

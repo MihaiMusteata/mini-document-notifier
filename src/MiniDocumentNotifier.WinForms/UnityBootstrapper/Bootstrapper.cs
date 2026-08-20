@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Infrastructure.Concurrency;
 using MiniDocumentNotifier.Infrastructure.Logging;
@@ -21,6 +22,8 @@ namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
 
             container.RegisterType<ILogger, NLogLogger>(new ContainerControlledLifetimeManager());
             var logger = container.Resolve<ILogger>();
+
+            container.RegisterType<IFileStorage, FileStorage>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance(CreateUserPreferencesStore(logger), new SingletonLifetimeManager());
 

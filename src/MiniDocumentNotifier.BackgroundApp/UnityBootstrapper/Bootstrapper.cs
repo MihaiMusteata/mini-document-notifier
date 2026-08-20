@@ -20,7 +20,8 @@ namespace MiniDocumentNotifier.BackgroundApp.UnityBootstrapper
         {
             var container = new UnityContainer();
 
-            container.RegisterType<IViewConfigurationSyncServiceClient, ViewConfigurationSyncServiceClient>(
+            container.RegisterFactory<IViewConfigurationSyncServiceClient>(
+                _ => new ViewConfigurationSyncServiceClient(),
                 new ContainerControlledLifetimeManager());
 
             var outputFilePath =

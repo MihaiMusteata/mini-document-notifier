@@ -15,8 +15,8 @@ namespace MiniDocumentNotifier.WinForms
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 
             var logger = Bootstrapper.Container.Resolve<ILogger>();
 
@@ -32,7 +32,7 @@ namespace MiniDocumentNotifier.WinForms
 
                 logger.Info("WinForms application started: single instance acquired.");
 
-                Application.Run(Bootstrapper.Container.Resolve<AppContext>());
+                System.Windows.Forms.Application.Run(Bootstrapper.Container.Resolve<AppContext>());
             }
         }
     }

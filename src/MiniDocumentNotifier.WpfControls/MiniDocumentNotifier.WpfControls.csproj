@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
     
     <Reference Include="Microsoft.CSharp" />
@@ -105,9 +106,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MiniDocumentNotifier.Application\MiniDocumentNotifier.Application.csproj">
+      <Project>{791c5964-767d-42ec-9378-0f58d7e4a18f}</Project>
+      <Name>MiniDocumentNotifier.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Contracts\MiniDocumentNotifier.Contracts.csproj">
+      <Project>{28fa09cc-5d56-4cf8-8415-0e49cebf0798}</Project>
+      <Name>MiniDocumentNotifier.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
       <Project>{d85c8837-8be6-4630-8b25-738de5d418ad}</Project>
       <Name>MiniDocumentNotifier.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MiniDocumentNotifier.Infrastructure\MiniDocumentNotifier.Infrastructure.csproj">
+      <Project>{800eb8ba-335f-4ddf-84c0-3037498f95ba}</Project>
+      <Name>MiniDocumentNotifier.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
 

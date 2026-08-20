@@ -1,17 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Domain.Abstractions;
+using MiniDocumentNotifier.Infrastructure.ServiceClient;
 using MiniDocumentNotifier.WinForms.Models;
 using MiniDocumentNotifier.WinForms.Presenters;
 using MiniDocumentNotifier.WinForms.Services;
+using MiniDocumentNotifier.WinForms.UnityBootstrapper;
 using MiniDocumentNotifier.WinForms.Views;
+using Unity;
 
 namespace MiniDocumentNotifier.WinForms.Forms
 {
     public partial class MainForm : Form, IMainView
     {
         private readonly MainPresenter _presenter;
+        private readonly IDocumentNotifierServiceClient _serviceClient;
         private bool _suppressWidthCapture;
 
         public MainForm(
@@ -31,6 +36,7 @@ namespace MiniDocumentNotifier.WinForms.Forms
         public MainForm(IUserPreferencesStore preferencesStore, IViewConfigurationStore viewConfigurationStore,
             IDocumentNotifierServiceClient serviceClient, bool isBackgroundAppRunning, int institutionId)
         {
+            _serviceClient = serviceClient;
             InitializeComponent();
 
             _presenter = new MainPresenter(this, preferencesStore, viewConfigurationStore,
@@ -161,7 +167,9 @@ namespace MiniDocumentNotifier.WinForms.Forms
 
         private void uploadToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            using (var uploadForm = new DocumentUploadForm(_presenter.InstitutionId))
+            var fileStorage = Bootstrapper.Container.Resolve<IFileStorage>();
+            
+            using (var uploadForm = new DocumentUploadForm(_presenter.InstitutionId, _serviceClient, fileStorage))
             {
                 if (uploadForm.ShowDialog(this) == DialogResult.OK)
                 {

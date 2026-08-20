@@ -1,14 +1,7 @@
-using System;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.ServiceModel;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
-using MiniDocumentNotifier.Contracts.DocumentUploadContracts;
-using MiniDocumentNotifier.Domain.Enums;
-using MiniDocumentNotifier.WinForms.Services;
+using MiniDocumentNotifier.Application.Document;
+using MiniDocumentNotifier.Infrastructure.ServiceClient;
 using MiniDocumentNotifier.WpfControls.ViewModels;
 using MiniDocumentNotifier.WpfControls.Views;
 
@@ -17,21 +10,17 @@ namespace MiniDocumentNotifier.WinForms.Forms
     public partial class DocumentUploadForm : Form
     {
         private readonly DocumentUploadViewModel _viewModel;
-        private readonly int _institutionId;
 
-        private const int MaxUploadSize = 5 * 1024 * 1024;
-
-        public DocumentUploadForm(int institutionId)
+        public DocumentUploadForm(
+            int institutionId,
+            IDocumentNotifierServiceClient client,
+            IFileStorage fileReader)
         {
             InitializeComponent();
 
-            _institutionId = institutionId;
-            _viewModel = new DocumentUploadViewModel
-            {
-                AvailableTypes = Enum.GetValues(typeof(DocumentType)).Cast<DocumentType>().ToList()
-            };
+            _viewModel = new DocumentUploadViewModel(client, fileReader, institutionId);
             _viewModel.FileSelectionRequested += OnFileSelectionRequested;
-            _viewModel.UploadRequested += async () => await OnUploadRequestedAsync();
+            _viewModel.UploadCompleted += OnUploadCompleted;
 
             var elementHost = new ElementHost
             {
@@ -46,63 +35,17 @@ namespace MiniDocumentNotifier.WinForms.Forms
         {
             using (var dialog = new OpenFileDialog())
             {
-                dialog.Filter = @"Documents|*.pdf;*.doc;*.docx ";
+                dialog.Filter = @"Documents|*.pdf;*.doc;*.docx";
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                     _viewModel.FilePath = dialog.FileName;
             }
         }
 
-        private async Task OnUploadRequestedAsync()
+        private void OnUploadCompleted()
         {
-            _viewModel.IsUploading = true;
-            _viewModel.StatusMessage = "Uploading...";
-
-            try
-            {
-                var fileInfo = new FileInfo(_viewModel.FilePath);
-
-                if (fileInfo.Length > MaxUploadSize)
-                    throw (new Exception("The file is too large. Maximum size is 5MB"));
-
-                var fileBytes = File.ReadAllBytes(_viewModel.FilePath);
-
-                var request = new DocumentUploadRequest
-                {
-                    InstitutionId = _institutionId,
-                    FileName = Path.GetFileName(_viewModel.FilePath),
-                    Type = _viewModel.SelectedType,
-                    Content = fileBytes
-                };
-
-                await Task.Run(() =>
-                {
-                    using (var client = new DocumentNotifierServiceClient())
-                    {
-                        return client.UploadDocument(request);
-                    }
-                });
-
-                _viewModel.StatusMessage = "Upload complete.";
-                DialogResult = DialogResult.OK;
-                Close();
-            }
-            catch (FaultException<DocumentUploadFault> fault)
-            {
-                _viewModel.StatusMessage = $"Upload failed: {fault.Detail.Message}";
-            }
-            catch (CommunicationException)
-            {
-                _viewModel.StatusMessage = "Communication error with the service.";
-            }
-            catch (Exception ex)
-            {
-                _viewModel.StatusMessage = $"Upload failed: {ex.Message}";
-            }
-            finally
-            {
-                _viewModel.IsUploading = false;
-            }
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }
