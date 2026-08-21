@@ -1,28 +1,31 @@
 using System.Data;
-using System.Data.SqlClient;
 using MiniDocumentNotifier.Domain.Entities;
 using MiniDocumentNotifier.Domain.Repositories;
+using MiniDocumentNotifier.Persistence.SqlConnFactory;
 
 namespace MiniDocumentNotifier.Persistence.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
+        public UserRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
+        {
+        }
+
         public UserEntity GetByUsernameAndInstitutionId(
             string username,
             int institutionId)
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            using (var command = new SqlCommand(
-                       "dbo.User_GetByUsernameAndInstitution",
-                       connection))
+            using (var connection = CreateConnection())
+            using (var command = connection.CreateCommand())
             {
+                command.CommandText = "dbo.User_GetByUsernameAndInstitution";
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(
-                    SetParameter("@Username", username, SqlDbType.VarChar));
+                    SetParameter(command, "@Username", username, DbType.AnsiString));
 
                 command.Parameters.Add(
-                    SetParameter("@InstitutionId", institutionId, SqlDbType.Int));
+                    SetParameter(command, "@InstitutionId", institutionId, DbType.Int32));
 
                 connection.Open();
 
@@ -48,24 +51,23 @@ namespace MiniDocumentNotifier.Persistence.Repositories
 
         public void Register(UserEntity user)
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            using (var command = new SqlCommand(
-                       "dbo.User_Register",
-                       connection))
+            using (var connection = CreateConnection())
+            using (var command = connection.CreateCommand())
             {
+                command.CommandText = "dbo.User_Register";
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(
-                    SetParameter("@Username", user.Username, SqlDbType.VarChar));
+                    SetParameter(command, "@Username", user.Username, DbType.AnsiString));
 
                 command.Parameters.Add(
-                    SetParameter("@PasswordHash", user.PasswordHash, SqlDbType.VarChar));
+                    SetParameter(command, "@PasswordHash", user.PasswordHash, DbType.AnsiString));
 
                 command.Parameters.Add(
-                    SetParameter("@PasswordSalt", user.PasswordSalt, SqlDbType.VarChar));
+                    SetParameter(command, "@PasswordSalt", user.PasswordSalt, DbType.AnsiString));
 
                 command.Parameters.Add(
-                    SetParameter("@InstitutionId", user.InstitutionId, SqlDbType.Int));
+                    SetParameter(command, "@InstitutionId", user.InstitutionId, DbType.Int32));
 
                 connection.Open();
 

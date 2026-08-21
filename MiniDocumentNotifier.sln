@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniDocumentNotifier.WpfCon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniDocumentNotifier.Infrastructure.Tests", "tests\MiniDocumentNotifier.Infrastructure.Tests\MiniDocumentNotifier.Infrastructure.Tests.csproj", "{9433FADE-8873-4D3F-90DB-0E531CABAE33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniDocumentNotifier.Persistence.Tests", "tests\MiniDocumentNotifier.Persistence.Tests\MiniDocumentNotifier.Persistence.Tests.csproj", "{6EECF22F-A46B-4229-BD25-B8234351579E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +227,18 @@ Global
 		{9433FADE-8873-4D3F-90DB-0E531CABAE33}.Release|x64.Build.0 = Release|Any CPU
 		{9433FADE-8873-4D3F-90DB-0E531CABAE33}.Release|x86.ActiveCfg = Release|Any CPU
 		{9433FADE-8873-4D3F-90DB-0E531CABAE33}.Release|x86.Build.0 = Release|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Debug|x64.Build.0 = Debug|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Debug|x86.Build.0 = Debug|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Release|x64.ActiveCfg = Release|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Release|x64.Build.0 = Release|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Release|x86.ActiveCfg = Release|Any CPU
+		{6EECF22F-A46B-4229-BD25-B8234351579E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -236,6 +250,7 @@ Global
 		{B41D5649-A28A-426E-BC11-E57556E0B3B9} = {594E0F99-C58F-4FAA-A55F-84D4EED16603}
 		{80B777C3-B8B8-419C-B315-3205D0FDB024} = {594E0F99-C58F-4FAA-A55F-84D4EED16603}
 		{9433FADE-8873-4D3F-90DB-0E531CABAE33} = {594E0F99-C58F-4FAA-A55F-84D4EED16603}
+		{6EECF22F-A46B-4229-BD25-B8234351579E} = {594E0F99-C58F-4FAA-A55F-84D4EED16603}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2879006A-6E46-448C-A140-2A74B402AAA4}

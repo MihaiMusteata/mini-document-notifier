@@ -1,29 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using MiniDocumentNotifier.Domain.Entities;
 using MiniDocumentNotifier.Domain.Enums;
 using MiniDocumentNotifier.Domain.Models;
 using MiniDocumentNotifier.Domain.Repositories;
+using MiniDocumentNotifier.Persistence.SqlConnFactory;
 
 namespace MiniDocumentNotifier.Persistence.Repositories
 {
     public class DocumentRepository : BaseRepository, IDocumentRepository
     {
+        public DocumentRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
+        {
+        }
+
         public List<DocumentEntity> GetByInstitution(int institutionId)
         {
             var documents = new List<DocumentEntity>();
 
-            using (var connection = new SqlConnection(ConnectionString))
-            using (var command = new SqlCommand("Document_GetByInstitution", connection))
+            using (var connection = CreateConnection())
+            using (var command = connection.CreateCommand())
             {
+                command.CommandText = "Document_GetByInstitution";
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add(
-                    SetParameter("@InstitutionId", institutionId, SqlDbType.Int)
-                );
+                command.Parameters.Add(SetParameter(command, "@InstitutionId", institutionId, DbType.Int32));
 
                 connection.Open();
 
@@ -58,23 +61,24 @@ namespace MiniDocumentNotifier.Persistence.Repositories
 
             try
             {
-                using (var connection = new SqlConnection(ConnectionString))
-                using (var command = new SqlCommand("Document_GetPaged", connection))
+                using (var connection = CreateConnection())
+                using (var command = connection.CreateCommand())
                 {
+                    command.CommandText = "Document_GetPaged";
                     command.CommandType = CommandType.StoredProcedure;
 
-                    command.Parameters.Add(SetParameter("@InstitutionId", query.InstitutionId, SqlDbType.Int));
-                    command.Parameters.Add(SetParameter("@PageNumber", query.PageNumber, SqlDbType.Int));
-                    command.Parameters.Add(SetParameter("@PageSize", query.PageSize, SqlDbType.Int));
-                    command.Parameters.Add(SetParameter("@AllowedTypes", allowedTypes, SqlDbType.NVarChar));
-                    command.Parameters.Add(SetParameter("@TypeFilter",
-                        query.TypeFilter.HasValue ? (int)query.TypeFilter.Value : (int?)null, SqlDbType.Int));
-                    command.Parameters.Add(SetParameter("@StatusFilter",
-                        query.StatusFilter.HasValue ? (int)query.StatusFilter.Value : (int?)null, SqlDbType.Int));
-                    command.Parameters.Add(SetParameter("@SortColumn", query.SortColumn, SqlDbType.VarChar));
-                    command.Parameters.Add(SetParameter("@SortDirection", query.SortDirection, SqlDbType.Bit));
+                    command.Parameters.Add(SetParameter(command, "@InstitutionId", query.InstitutionId, DbType.Int32));
+                    command.Parameters.Add(SetParameter(command, "@PageNumber", query.PageNumber, DbType.Int32));
+                    command.Parameters.Add(SetParameter(command, "@PageSize", query.PageSize, DbType.Int32));
+                    command.Parameters.Add(SetParameter(command, "@AllowedTypes", allowedTypes, DbType.String));
+                    command.Parameters.Add(SetParameter(command, "@TypeFilter",
+                        query.TypeFilter.HasValue ? (int)query.TypeFilter.Value : (int?)null, DbType.Int32));
+                    command.Parameters.Add(SetParameter(command, "@StatusFilter",
+                        query.StatusFilter.HasValue ? (int)query.StatusFilter.Value : (int?)null, DbType.Int32));
+                    command.Parameters.Add(SetParameter(command, "@SortColumn", query.SortColumn, DbType.AnsiString));
+                    command.Parameters.Add(SetParameter(command, "@SortDirection", query.SortDirection, DbType.Boolean));
 
-                    var totalCountParam = SetOutputParameter("@TotalCount", SqlDbType.Int);
+                    var totalCountParam = SetOutputParameter(command, "@TotalCount", DbType.Int32);
                     command.Parameters.Add(totalCountParam);
 
                     connection.Open();
@@ -113,18 +117,19 @@ namespace MiniDocumentNotifier.Persistence.Repositories
 
         public int Insert(DocumentEntity document)
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            using (var command = new SqlCommand("Document_Insert", connection))
+            using (var connection = CreateConnection())
+            using (var command = connection.CreateCommand())
             {
+                command.CommandText = "Document_Insert";
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add(SetParameter("@InstitutionId", document.InstitutionId, SqlDbType.Int));
-                command.Parameters.Add(SetParameter("@Name", document.Name, SqlDbType.VarChar));
-                command.Parameters.Add(SetParameter("@Type", (int)document.Type, SqlDbType.Int));
-                command.Parameters.Add(SetParameter("@UploadDate", document.UploadDate, SqlDbType.DateTime2));
-                command.Parameters.Add(SetParameter("@Status", (int)document.Status, SqlDbType.Int));
+                command.Parameters.Add(SetParameter(command, "@InstitutionId", document.InstitutionId, DbType.Int32));
+                command.Parameters.Add(SetParameter(command, "@Name", document.Name, DbType.AnsiString));
+                command.Parameters.Add(SetParameter(command, "@Type", (int)document.Type, DbType.Int32));
+                command.Parameters.Add(SetParameter(command, "@UploadDate", document.UploadDate, DbType.DateTime2));
+                command.Parameters.Add(SetParameter(command, "@Status", (int)document.Status, DbType.Int32));
 
-                var documentIdParam = SetOutputParameter("@DocumentId", SqlDbType.Int);
+                var documentIdParam = SetOutputParameter(command, "@DocumentId", DbType.Int32);
                 command.Parameters.Add(documentIdParam);
 
                 connection.Open();

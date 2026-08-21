@@ -1,21 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using MiniDocumentNotifier.Domain.Entities;
 using MiniDocumentNotifier.Domain.Repositories;
+using MiniDocumentNotifier.Persistence.SqlConnFactory;
 
 namespace MiniDocumentNotifier.Persistence.Repositories
 {
     public class ViewConfigurationRepository : BaseRepository, IViewConfigurationRepository
     {
+        public ViewConfigurationRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
+        {
+        }
+
         public List<ViewConfigurationEntity> GetAllWithInstitutions()
         {
             var viewConfigurations = new List<ViewConfigurationEntity>();
 
-            using (var connection = new SqlConnection(ConnectionString))
-            using (var command = new SqlCommand("dbo.ViewConfiguration_GetAllWithInstitutions", connection))
+            using (var connection = CreateConnection())
+            using (var command = connection.CreateCommand())
             {
+                command.CommandText = "dbo.ViewConfiguration_GetAllWithInstitutions";
                 command.CommandType = CommandType.StoredProcedure;
                 connection.Open();
 

@@ -8,6 +8,7 @@ using MiniDocumentNotifier.Domain.Repositories;
 using MiniDocumentNotifier.Infrastructure.Logging;
 using MiniDocumentNotifier.Infrastructure.Security;
 using MiniDocumentNotifier.Persistence.Repositories;
+using MiniDocumentNotifier.Persistence.SqlConnFactory;
 using Unity;
 using Unity.Injection;
 using Unity.Lifetime;
@@ -20,7 +21,13 @@ namespace MiniDocumentNotifier.WcfHost.UnityBootstrapper
 
         private static IUnityContainer BuildContainer()
         {
+            var connectionString = ConfigurationManager.ConnectionStrings["MiniDocumentNotifierDb"].ConnectionString;
+
             var container = new UnityContainer();
+
+            container.RegisterType<IDbConnectionFactory, SqlConnectionFactory>(
+                new ContainerControlledLifetimeManager(),
+                new InjectionConstructor(connectionString));
 
             container.RegisterType<IUserRepository, UserRepository>();
             container.RegisterType<IInstitutionRepository, InstitutionRepository>();

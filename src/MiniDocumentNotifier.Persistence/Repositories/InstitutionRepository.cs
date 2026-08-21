@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Entities;
 using MiniDocumentNotifier.Domain.Repositories;
+using MiniDocumentNotifier.Persistence.SqlConnFactory;
 
 namespace MiniDocumentNotifier.Persistence.Repositories
 {
@@ -11,7 +11,7 @@ namespace MiniDocumentNotifier.Persistence.Repositories
     {
         private readonly ILogger _logger;
 
-        public InstitutionRepository(ILogger logger)
+        public InstitutionRepository(IDbConnectionFactory connectionFactory, ILogger logger) : base(connectionFactory)
         {
             _logger = logger;
         }
@@ -21,9 +21,10 @@ namespace MiniDocumentNotifier.Persistence.Repositories
             _logger.Info("Getting all institutions");
             var institutions = new List<InstitutionEntity>();
 
-            using (var connection = new SqlConnection(ConnectionString))
-            using (var command = new SqlCommand("dbo.Institution_GetAll", connection))
+            using (var connection = CreateConnection())
+            using (var command = connection.CreateCommand())
             {
+                command.CommandText = "dbo.Institution_GetAll";
                 command.CommandType = CommandType.StoredProcedure;
                 connection.Open();
 
@@ -46,11 +47,12 @@ namespace MiniDocumentNotifier.Persistence.Repositories
 
         public InstitutionEntity GetById(int institutionId)
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            using (var command = new SqlCommand("dbo.Institution_GetById", connection))
+            using (var connection = CreateConnection())
+            using (var command = connection.CreateCommand())
             {
+                command.CommandText = "dbo.Institution_GetById";
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(SetParameter("@Id", institutionId, SqlDbType.Int));
+                command.Parameters.Add(SetParameter(command, "@Id", institutionId, DbType.Int32));
 
                 connection.Open();
 

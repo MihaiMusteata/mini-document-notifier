@@ -1,32 +1,44 @@
-using System.Configuration;
+using System;
 using System.Data;
-using System.Data.SqlClient;
+using MiniDocumentNotifier.Persistence.SqlConnFactory;
 
 namespace MiniDocumentNotifier.Persistence
 {
     public class BaseRepository
     {
-        protected readonly string ConnectionString =
-            ConfigurationManager.ConnectionStrings["MiniDocumentNotifierDb"].ConnectionString;
+        private readonly IDbConnectionFactory _connectionFactory;
 
-        protected SqlParameter SetParameter(string parameterName, object parameterValue, SqlDbType dbType)
+        protected BaseRepository(IDbConnectionFactory connectionFactory)
         {
-            var sqlParameter = new SqlParameter(parameterName, dbType)
-            {
-                Value = parameterValue,
-                Direction = ParameterDirection.Input
-            };
-
-            return sqlParameter;
+            _connectionFactory = connectionFactory;
         }
 
-        protected SqlParameter SetOutputParameter(string parameterName, SqlDbType dbType)
+        protected IDbConnection CreateConnection() => _connectionFactory.CreateConnection();
+
+        protected IDataParameter SetParameter(
+            IDbCommand command,
+            string parameterName,
+            object parameterValue,
+            DbType dbType)
         {
-            return new SqlParameter(parameterName, dbType)
-            {
-                Direction = ParameterDirection.Output
-            };
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = parameterName;
+            parameter.DbType = dbType;
+            parameter.Value = parameterValue ?? DBNull.Value;
+            parameter.Direction = ParameterDirection.Input;
+            return parameter;
         }
-        
+
+        protected IDataParameter SetOutputParameter(
+            IDbCommand command,
+            string parameterName,
+            DbType dbType)
+        {
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = parameterName;
+            parameter.DbType = dbType;
+            parameter.Direction = ParameterDirection.Output;
+            return parameter;
+        }
     }
 }
