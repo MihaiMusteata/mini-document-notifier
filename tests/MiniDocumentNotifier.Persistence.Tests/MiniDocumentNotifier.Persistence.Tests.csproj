@@ -97,6 +97,7 @@
       <Reference Include="System.ComponentModel.DataAnnotations" />
       <Reference Include="System.Configuration" />
       <Reference Include="System.Core" />
+      <Reference Include="System.Data" />
       <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
         <HintPath>..\..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
       </Reference>
@@ -138,6 +139,13 @@
         <Project>{0f7f89c6-606a-4723-982b-8abbd6c08165}</Project>
         <Name>MiniDocumentNotifier.Persistence</Name>
       </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="Repositories\DocumentRepositoryTest.cs" />
+      <Compile Include="Repositories\FakeParameter.cs" />
+      <Compile Include="Repositories\InstitutionRepositoryTest.cs" />
+      <Compile Include="Repositories\UserRepositoryTest.cs" />
+      <Compile Include="Repositories\ViewConfigurationRepositoryTest.cs" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
