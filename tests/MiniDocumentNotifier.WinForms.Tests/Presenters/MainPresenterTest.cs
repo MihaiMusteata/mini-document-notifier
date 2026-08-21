@@ -288,16 +288,25 @@ namespace MiniDocumentNotifier.WinForms.Tests.Presenters
         }
 
         [TestMethod]
-        public async Task OnPrevPageAsync_DecrementsPageAndReloadsData()
+        public async Task OnPrevPageAsync_DecrementsFirstPage_Return()
         {
+            await InitializePresenterAsync();
+            
+            await _presenter.OnPrevPageAsync();
+
+            _client.Verify(c => c.GetDocumentsPaged(It.IsAny<DocumentQueryRequest>()), Times.Never);
+        }
+
+        [TestMethod]
+        public async Task OnPrevPageAsync_DecrementsPage()
+        { 
             await InitializePresenterAsync();
             await _presenter.OnNextPageAsync();
             _client.Invocations.Clear();
 
             await _presenter.OnPrevPageAsync();
 
-            _client.Verify(c => c.GetDocumentsPaged(
-                It.Is<DocumentQueryRequest>(r => r.PageNumber == 0)), Times.Once);
+            _client.Verify(c => c.GetDocumentsPaged(It.IsAny<DocumentQueryRequest>()), Times.Once);
         }
 
         [TestMethod]

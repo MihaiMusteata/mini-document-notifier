@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace MiniDocumentNotifier.Application.Document
@@ -27,6 +28,31 @@ namespace MiniDocumentNotifier.Application.Document
         public IFileMetadata GetInfo(string path)
         {
             return new FileMetadata(new FileInfo(path));
+        }
+
+        public bool Exists(string path)
+        {
+            return File.Exists(path);
+        }
+
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        public DateTime GetLastWriteTimeUtc(string path)
+        {
+            return File.GetLastWriteTimeUtc(path);
+        }
+
+        public string ReadAllText(string path)
+        {
+            return File.ReadAllText(path);
+        }
+
+        public string GetDirectoryName(string path)
+        {
+            return Path.GetDirectoryName(path);
         }
     }
 

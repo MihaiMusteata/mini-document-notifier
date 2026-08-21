@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using MiniDocumentNotifier.Application.Document;
+using MiniDocumentNotifier.Application.RegistryWrapper;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Infrastructure.Concurrency;
 using MiniDocumentNotifier.Infrastructure.Logging;
@@ -21,15 +22,26 @@ namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
             var container = new UnityContainer();
 
             container.RegisterType<ILogger, NLogLogger>(new ContainerControlledLifetimeManager());
-            var logger = container.Resolve<ILogger>();
-
             container.RegisterType<IFileStorage, FileStorage>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IRegistryStore, RegistryStore>(new ContainerControlledLifetimeManager());
 
-            container.RegisterInstance(CreateUserPreferencesStore(logger), new SingletonLifetimeManager());
+            var logger = container.Resolve<ILogger>();
+            var fileStorage = container.Resolve<IFileStorage>();
+            var registryStore = container.Resolve<IRegistryStore>();
+
+            container.RegisterInstance(
+                CreateUserPreferencesStore(logger, fileStorage, registryStore),
+                new SingletonLifetimeManager());
 
             var viewConfigPath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["ViewConfigPath"]);
             var stalenessHours = int.Parse(ConfigurationManager.AppSettings["ViewConfigStalenessThresholdHours"]);
-            container.RegisterInstance<IViewConfigurationStore>(new JsonViewConfigurationStore(TimeSpan.FromHours(stalenessHours), viewConfigPath, logger), new SingletonLifetimeManager());
+            container.RegisterInstance<IViewConfigurationStore>(
+                new JsonViewConfigurationStore(
+                    TimeSpan.FromHours(stalenessHours),
+                    viewConfigPath,
+                    logger,
+                    fileStorage),
+                new SingletonLifetimeManager());
 
             container.RegisterType<AppContext>(new TransientLifetimeManager());
 
@@ -41,19 +53,19 @@ namespace MiniDocumentNotifier.WinForms.UnityBootstrapper
             return container;
 
         }
-
-        private static IUserPreferencesStore CreateUserPreferencesStore(ILogger logger)
+        
+        private static IUserPreferencesStore CreateUserPreferencesStore(ILogger logger, IFileStorage fileStorage, IRegistryStore registryStore)
         {
             var source = ConfigurationManager.AppSettings["UserPreferencesSource"];
 
             if (string.Equals(source, "Registry",StringComparison.CurrentCultureIgnoreCase))
             {
                 var registryKey = ConfigurationManager.AppSettings["UserPreferencesRegistryKey"];
-                return new RegistryUserPreferencesStore(registryKey, logger);
+                return new RegistryUserPreferencesStore(registryKey, logger, registryStore);
             }
 
             var jsonPath = Environment.ExpandEnvironmentVariables(ConfigurationManager.AppSettings["UserPreferencesPath"]);
-            return new  JsonUserPreferencesStore(jsonPath, logger);
+            return new  JsonUserPreferencesStore(jsonPath, logger, fileStorage);
         }
     }
 }

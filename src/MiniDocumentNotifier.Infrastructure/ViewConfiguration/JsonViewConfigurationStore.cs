@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using MiniDocumentNotifier.Application.Document;
 using MiniDocumentNotifier.Domain.Abstractions;
 using MiniDocumentNotifier.Domain.Models;
 using Newtonsoft.Json.Linq;
@@ -13,17 +13,19 @@ namespace MiniDocumentNotifier.Infrastructure.ViewConfiguration
         private readonly TimeSpan _stalenessThreshold;
         private readonly string _path;
         private readonly ILogger _logger;
+        private readonly IFileStorage _fileStorage;
 
-        public JsonViewConfigurationStore(TimeSpan stalenessThreshold, string path, ILogger logger)
+        public JsonViewConfigurationStore(TimeSpan stalenessThreshold, string path, ILogger logger, IFileStorage fileStorage)
         {
             _stalenessThreshold = stalenessThreshold;
             _path = path;
             _logger = logger;
+            _fileStorage = fileStorage;
         }
 
         public ViewConfigurationResult Load()
         {
-            if (!File.Exists(_path))
+            if (!_fileStorage.Exists(_path))
             {
                 _logger.Warning($"View configuration file not found at '{_path}'.");
                 return new ViewConfigurationResult
@@ -34,7 +36,7 @@ namespace MiniDocumentNotifier.Infrastructure.ViewConfiguration
                 };
             }
 
-            var lastWrite = File.GetLastWriteTimeUtc(_path);
+            var lastWrite = _fileStorage.GetLastWriteTimeUtc(_path);
             var isStale = DateTime.UtcNow - lastWrite > _stalenessThreshold;
 
             if (isStale)
@@ -45,7 +47,7 @@ namespace MiniDocumentNotifier.Infrastructure.ViewConfiguration
             JArray root;
             try
             {
-                root = JArray.Parse(File.ReadAllText(_path));
+                root = JArray.Parse(_fileStorage.ReadAllText(_path));
             }
             catch (Exception ex)
             {

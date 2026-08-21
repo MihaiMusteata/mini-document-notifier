@@ -21,6 +21,7 @@
 
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -71,6 +72,8 @@
         <Compile Include="Institution\IInstitutionQueryService.cs" />
         <Compile Include="Institution\InstitutionQueryService.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="RegistryWrapper\IRegistryStore.cs" />
+        <Compile Include="RegistryWrapper\RegistryStore.cs" />
         <Compile Include="Sync\IViewConfigurationSyncService.cs" />
         <Compile Include="Sync\IViewConfigurationSyncServiceClient.cs" />
         <Compile Include="Sync\ViewConfigurationSyncService.cs" />
@@ -87,11 +90,6 @@
         <ProjectReference Include="..\MiniDocumentNotifier.Domain\MiniDocumentNotifier.Domain.csproj">
             <Project>{D85C8837-8BE6-4630-8B25-738DE5D418AD}</Project>
             <Name>MiniDocumentNotifier.Domain</Name>
-        </ProjectReference>
-
-        <ProjectReference Include="..\MiniDocumentNotifier.Infrastructure\MiniDocumentNotifier.Infrastructure.csproj">
-            <Project>{800EB8BA-335F-4DDF-84C0-3037498F95BA}</Project>
-            <Name>MiniDocumentNotifier.Infrastructure</Name>
         </ProjectReference>
     </ItemGroup>
 
